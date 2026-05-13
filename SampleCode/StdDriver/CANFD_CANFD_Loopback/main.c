@@ -28,7 +28,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-CANFD_T * g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
+CANFD_T *g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
 CANFD_FD_MSG_T      g_sRxMsgFrame;
 CANFD_FD_MSG_T      g_sTxMsgFrame;
 volatile uint8_t   g_u8RxFIFO1CompleteFlag = 0;
@@ -39,30 +39,30 @@ volatile uint8_t   g_u8RxFIFO1CompleteFlag = 0;
 void SYS_Init(void);
 void CANFD_TEST_HANDLE(void);
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void);
+    void CANFD00_IRQHandler(void);
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void);
+    void CANFD10_IRQHandler(void);
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void);
+    void CANFD20_IRQHandler(void);
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #else
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #endif
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* ISR to handle CAN FD Line 0 interrupt event                                                             */
 /*---------------------------------------------------------------------------------------------------------*/
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void)
+    void CANFD00_IRQHandler(void)
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void)
+    void CANFD10_IRQHandler(void)
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void)
+    void CANFD20_IRQHandler(void)
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #else
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #endif
 {
     CANFD_TEST_HANDLE();
@@ -163,34 +163,34 @@ void CANFD_CANFD_TxRx_Test(CANFD_FD_MSG_T *psTxMsg, E_CANFD_ID_TYPE eFrameIdType
     psTxMsg->bBitRateSwitch = 1;
 
     /* Set data length */
-    if(u8LenType == 0)      psTxMsg->u32DLC = 8;
-    else if(u8LenType == 1) psTxMsg->u32DLC = 12;
-    else if(u8LenType == 2) psTxMsg->u32DLC = 16;
-    else if(u8LenType == 3) psTxMsg->u32DLC = 20;
-    else if(u8LenType == 4) psTxMsg->u32DLC = 24;
-    else if(u8LenType == 5) psTxMsg->u32DLC = 32;
-    else if(u8LenType == 6) psTxMsg->u32DLC = 48;
-    else if(u8LenType == 7) psTxMsg->u32DLC = 64;
+    if (u8LenType == 0)      psTxMsg->u32DLC = 8;
+    else if (u8LenType == 1) psTxMsg->u32DLC = 12;
+    else if (u8LenType == 2) psTxMsg->u32DLC = 16;
+    else if (u8LenType == 3) psTxMsg->u32DLC = 20;
+    else if (u8LenType == 4) psTxMsg->u32DLC = 24;
+    else if (u8LenType == 5) psTxMsg->u32DLC = 32;
+    else if (u8LenType == 6) psTxMsg->u32DLC = 48;
+    else if (u8LenType == 7) psTxMsg->u32DLC = 64;
 
-    for(u8Cnt = 0; u8Cnt < psTxMsg->u32DLC; u8Cnt++) psTxMsg->au8Data[u8Cnt] = u8Cnt;
+    for (u8Cnt = 0; u8Cnt < psTxMsg->u32DLC; u8Cnt++) psTxMsg->au8Data[u8Cnt] = u8Cnt;
 
     g_u8RxFIFO1CompleteFlag = 0;
 
     /* Use message buffer 1 */
-    if(eFrameIdType == eCANFD_SID)
+    if (eFrameIdType == eCANFD_SID)
         printf("Send to transmit message 0x%08x (11-bit)\n", psTxMsg->u32Id);
     else
         printf("Send to transmit message 0x%08x (29-bit)\n", psTxMsg->u32Id);
 
-    if(CANFD_TransmitTxMsg(g_pCanfd, 0, psTxMsg) != eCANFD_TRANSMIT_SUCCESS)
+    if (CANFD_TransmitTxMsg(g_pCanfd, 0, psTxMsg) != eCANFD_TRANSMIT_SUCCESS)
     {
         printf("Failed to transmit message\n");
     }
 
     /* Wait the Rx FIFO1 received message */
-    while(!g_u8RxFIFO1CompleteFlag)
+    while (!g_u8RxFIFO1CompleteFlag)
     {
-        if(--u32TimeOutCnt == 0)
+        if (--u32TimeOutCnt == 0)
         {
             printf("Wait for CANFD Rx FIFO1 received message time-out!\n");
             return;
@@ -200,7 +200,7 @@ void CANFD_CANFD_TxRx_Test(CANFD_FD_MSG_T *psTxMsg, E_CANFD_ID_TYPE eFrameIdType
     printf("Rx FIFO1 : Received message 0x%08X\n", g_sRxMsgFrame.u32Id);
     printf("Message Data : ");
 
-    for(u8Cnt = 0; u8Cnt <  g_sRxMsgFrame.u32DLC; u8Cnt++)
+    for (u8Cnt = 0; u8Cnt <  g_sRxMsgFrame.u32DLC; u8Cnt++)
     {
         printf("%02d ,", g_sRxMsgFrame.au8Data[u8Cnt]);
     }
@@ -217,6 +217,8 @@ void CANFD_CANFD_Loopback(void)
     uint8_t u8Loop;
     CANFD_FD_T sCANFD_Config;
 
+    /* Use defined configuration */
+    sCANFD_Config.sElemSize.u32UserDef = 0;
     /* Get the CAN FD configuration value */
     CANFD_GetDefaultConfig(&sCANFD_Config, CANFD_OP_CAN_FD_MODE);
     /* Enable internal loopback mode */
@@ -238,6 +240,9 @@ void CANFD_CANFD_Loopback(void)
     NVIC_EnableIRQ(CANFD30_IRQn);
 #endif
 
+    printf("CAN FD Nominal bit rate(bps): %d\n", CANFD_GetNominalBitRate(g_pCanfd));
+    printf("CAN FD Data bit rate(bps): %d\n", CANFD_GetDataBitRate(g_pCanfd));
+
     /* Receive 0x110~0x11F in CAN FD rx FIFO1 buffer by setting mask 0 */
     CANFD_SetSIDFltr(g_pCanfd, 0, CANFD_RX_FIFO1_STD_MASK(0x110, 0x7F0));
     /* Receive 0x22F in CAN FD rx FIFO1 buffer by setting mask 1 */
@@ -258,7 +263,7 @@ void CANFD_CANFD_Loopback(void)
     /* CAN FD Run to Normal mode */
     CANFD_RunToNormal(g_pCanfd, TRUE);
 
-    for(u8Loop = 0  ; u8Loop < 8; u8Loop++)
+    for (u8Loop = 0  ; u8Loop < 8; u8Loop++)
     {
         CANFD_CANFD_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x110 + u8Loop, u8Loop);
     }
@@ -266,7 +271,7 @@ void CANFD_CANFD_Loopback(void)
     CANFD_CANFD_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x22F, 7);
     CANFD_CANFD_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x333, 7);
 
-    for(u8Loop = 0 ; u8Loop < 8; u8Loop++)
+    for (u8Loop = 0 ; u8Loop < 8; u8Loop++)
     {
         CANFD_CANFD_TxRx_Test(&g_sTxMsgFrame, eCANFD_XID, 0x220 + u8Loop, u8Loop);
     }
@@ -322,5 +327,5 @@ int main()
 
     printf("\n CANFD%d FD Mode Loopback Test Done\r\n", ((CANFD_MODULE == 0) ? 0 : (CANFD_MODULE == 1) ? 1 : (CANFD_MODULE == 2) ? 2 : 3));
 
-    while(1) {}
+    while (1) {}
 }

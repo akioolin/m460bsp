@@ -28,16 +28,20 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-CANFD_T * g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
+CANFD_T *g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
+volatile uint8_t   g_u8BusOffFlag = 0;
+volatile uint32_t  g_u32BusOffRecoveryCounter = 0;
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* Define functions prototype                                                                              */
 /*---------------------------------------------------------------------------------------------------------*/
+int32_t main(void);
 void SYS_Init(void);
 void CANFD_Init(void);
+void CANFD_Fini(void);
 void CANFD_TxRxTest(void);
-
-
+uint8_t CANFD_BusOffRecovery(void);
+uint8_t CANFD_CheckBusOffStatus(void);
 
 void SYS_Init(void)
 {
@@ -147,6 +151,8 @@ void CANFD_Init(void)
     printf("|         |-----------|          |-----------|                |\n");
     printf("+-------------------------------------------------------------+\n\n");
 
+    /* Use defined configuration */
+    sCANFD_Config.sElemSize.u32UserDef = 0;
     /* Get the CAN FD configuration value */
     CANFD_GetDefaultConfig(&sCANFD_Config, CANFD_OP_CAN_FD_MODE);
     sCANFD_Config.sBtConfig.sNormBitRate.u32BitRate = 1000000;
@@ -165,6 +171,9 @@ void CANFD_Init(void)
 #else
     NVIC_EnableIRQ(CANFD30_IRQn);
 #endif
+
+    printf("CAN FD Nominal bit rate(bps): %d\n", CANFD_GetNominalBitRate(g_pCanfd));
+    printf("CAN FD Data bit rate(bps): %d\n", CANFD_GetDataBitRate(g_pCanfd));
 
     /* Receive 0x111 (11-bit id) in CAN FD rx message buffer 0 by setting mask 0 */
     CANFD_SetSIDFltr(g_pCanfd, 0, CANFD_RX_BUFFER_STD(0x111, 0));
@@ -203,6 +212,90 @@ void CANFD_Fini(void)
 }
 
 /*---------------------------------------------------------------------------------------------------------*/
+/* CAN FD Bus-Off Status Check Function                                                                    */
+/*---------------------------------------------------------------------------------------------------------*/
+uint8_t CANFD_CheckBusOffStatus(void)
+{
+    uint32_t u32IntStatus;
+
+    /* Read interrupt status register */
+    u32IntStatus = g_pCanfd->IR;
+
+    /* Check Bus-Off status */
+    if (u32IntStatus & CANFD_IR_BO_Msk)
+    {
+        if (g_pCanfd->PSR & CANFD_PSR_BO_Msk)
+        {
+            printf("Bus-Off detected!\n");
+            g_u8BusOffFlag = 1;
+        }
+
+        /* Clear Bus-Off interrupt flag */
+        CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_BO_Msk);
+        /* Bus-Off detected */
+        return 1;
+    }
+
+    /* Check Error Warning status */
+    if (u32IntStatus & CANFD_IR_EW_Msk)
+    {
+        printf("Error warning flag is set.\n");
+        CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_EW_Msk);
+    }
+
+    /* Check Error Passive status */
+    if (u32IntStatus & CANFD_IR_EP_Msk)
+    {
+        printf("Error passive flag is set.\n");
+        CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_EP_Msk);
+    }
+
+    /* No Bus-Off detected */
+    return 0;
+}
+
+/*---------------------------------------------------------------------------------------------------------*/
+/* CAN FD Bus-Off Recovery Function                                                                        */
+/*---------------------------------------------------------------------------------------------------------*/
+uint8_t CANFD_BusOffRecovery(void)
+{
+    printf("Starting CAN FD Bus-Off recovery sequence...\n");
+
+    /* CAN FD run to initial mode */
+    CANFD_RunToNormal(g_pCanfd, FALSE);
+
+    /* Cancel all transmit requests */
+    g_pCanfd->TXBCR = 0xFFFFFFFF;
+
+    /* Clear all interrupt flag */
+    CANFD_ClearStatusFlag(g_pCanfd, 0xFFFFFFFF);
+
+    /* CAN FD run to normal mode */
+    CANFD_RunToNormal(g_pCanfd, TRUE);
+
+    /* 50ms delay after recovery process */
+    CLK_SysTickDelay(50000);
+
+    /* Check if recovery was successful by verifying Bus-Off status */
+    if (g_pCanfd->PSR & CANFD_PSR_BO_Msk)
+    {
+        /* Still in Bus-Off state, recovery failed */
+        printf("CAN FD Bus-Off recovery failed. Still in Bus-Off state.\n");
+        /* Recovery failed */
+        return 0;
+    }
+    else
+    {
+        /* Recovery successful, clear Bus-Off flag */
+        g_u8BusOffFlag = 0;
+        g_u32BusOffRecoveryCounter++;
+        printf("CAN FD Bus-Off recovery completed. Recovery count: %u\n", g_u32BusOffRecoveryCounter);
+        /* Recovery successful */
+        return 1;
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------*/
 /* CAN FD Function Test                                                                                    */
 /*---------------------------------------------------------------------------------------------------------*/
 void CANFD_TxRxTest(void)
@@ -227,29 +320,49 @@ void CANFD_TxRxTest(void)
     printf("|    and the other is slave(CAN FD receiver). Master will send 6 messages  |\n");
     printf("|    with different sizes of data and ID to the slave. Slave will check if |\n");
     printf("|    received data is correct after getting 6 messages data.               |\n");
+    printf("|    Bus-Off recovery feature is enabled for error handling.               |\n");
     printf("|  Please select Master or Slave test                                      |\n");
     printf("|  [0] Master(CAN FD transmitter)    [1] Slave(CAN FD receiver)            |\n");
     printf("+--------------------------------------------------------------------------+\n\n");
 
     u8Item = getchar();
 
-    if(u8Item == '0')
+    if (u8Item == '0')
     {
         /* Send 6 messages with different ID and data size */
-        for(u8TxTestNum = 0; u8TxTestNum < 6 ; u8TxTestNum++)
+        for (u8TxTestNum = 0; u8TxTestNum < 6 ; u8TxTestNum++)
         {
+            /* Check for Bus-Off status before transmission */
+            CANFD_CheckBusOffStatus();
+
+            /* Check if CAN FD is in Bus-Off state before transmitting */
+            if (g_u8BusOffFlag)
+            {
+                printf("CAN FD is in Bus-Off state. Starting recovery process...\n");
+
+                if (CANFD_BusOffRecovery())
+                {
+                    printf("Bus-Off recovery successful. Proceeding with transmission.\n");
+                }
+                else
+                {
+                    printf("Bus-Off recovery failed. Skipping transmission.\n");
+                    continue; /* Skip this transmission and try next */
+                }
+            }
+
             printf("Start to CAN FD Bus Transmitter :\n");
 
             /* Set the ID Number */
-            if(u8TxTestNum == 0)      sTxMsgFrame.u32Id = 0x111;
-            else if(u8TxTestNum == 1) sTxMsgFrame.u32Id = 0x22F;
-            else if(u8TxTestNum == 2) sTxMsgFrame.u32Id = 0x333;
-            else if(u8TxTestNum == 3) sTxMsgFrame.u32Id = 0x222;
-            else if(u8TxTestNum == 4) sTxMsgFrame.u32Id = 0x3333;
-            else if(u8TxTestNum == 5) sTxMsgFrame.u32Id = 0x44444;
+            if (u8TxTestNum == 0)      sTxMsgFrame.u32Id = 0x111;
+            else if (u8TxTestNum == 1) sTxMsgFrame.u32Id = 0x22F;
+            else if (u8TxTestNum == 2) sTxMsgFrame.u32Id = 0x333;
+            else if (u8TxTestNum == 3) sTxMsgFrame.u32Id = 0x222;
+            else if (u8TxTestNum == 4) sTxMsgFrame.u32Id = 0x3333;
+            else if (u8TxTestNum == 5) sTxMsgFrame.u32Id = 0x44444;
 
             /* Set the ID type */
-            if(u8TxTestNum < 3)
+            if (u8TxTestNum < 3)
                 sTxMsgFrame.eIdType = eCANFD_SID;
             else
                 sTxMsgFrame.eIdType = eCANFD_XID;
@@ -262,18 +375,18 @@ void CANFD_TxRxTest(void)
             sTxMsgFrame.bBitRateSwitch = 1;
 
             /* Set the data length */
-            if(u8TxTestNum == 0  ||  u8TxTestNum == 3)     sTxMsgFrame.u32DLC = 16;
-            else if(u8TxTestNum == 1 || u8TxTestNum == 4)  sTxMsgFrame.u32DLC = 32;
-            else if(u8TxTestNum == 2 || u8TxTestNum == 5)  sTxMsgFrame.u32DLC = 64;
+            if (u8TxTestNum == 0  ||  u8TxTestNum == 3)     sTxMsgFrame.u32DLC = 16;
+            else if (u8TxTestNum == 1 || u8TxTestNum == 4)  sTxMsgFrame.u32DLC = 32;
+            else if (u8TxTestNum == 2 || u8TxTestNum == 5)  sTxMsgFrame.u32DLC = 64;
 
-            if(u8TxTestNum < 3)
+            if (u8TxTestNum < 3)
                 printf("Send to transmit message 0x%08x (11-bit)\n", sTxMsgFrame.u32Id);
             else
                 printf("Send to transmit message 0x%08x (29-bit)\n", sTxMsgFrame.u32Id);
 
             printf("Data Message : ");
 
-            for(u8Cnt = 0; u8Cnt < sTxMsgFrame.u32DLC; u8Cnt++)
+            for (u8Cnt = 0; u8Cnt < sTxMsgFrame.u32DLC; u8Cnt++)
             {
                 sTxMsgFrame.au8Data[u8Cnt] = u8Cnt + u8TxTestNum;
                 printf("%02d,", sTxMsgFrame.au8Data[u8Cnt]);
@@ -282,14 +395,31 @@ void CANFD_TxRxTest(void)
             printf("\n\n");
 
             /* Use message buffer 0 */
-            if(CANFD_TransmitTxMsg(g_pCanfd, 0, &sTxMsgFrame) != eCANFD_TRANSMIT_SUCCESS)
+            if (CANFD_TransmitTxMsg(g_pCanfd, 0, &sTxMsgFrame) != eCANFD_TRANSMIT_SUCCESS)
             {
                 printf("Failed to transmit message\n");
+
+                /* Check if failure was due to bus-off condition */
+                if (CANFD_CheckBusOffStatus())
+                {
+                    printf("Transmission failed due to Bus-Off condition.\n");
+                }
+            }
+            else
+            {
+                /* Check for any error conditions after successful transmission */
+                CANFD_CheckBusOffStatus();
+                printf("Message transmitted successfully.\n");
             }
 
         }
 
         printf("\n Transmit Done\n");
+
+        if (g_u32BusOffRecoveryCounter > 0)
+        {
+            printf("Total Bus-Off recovery cycles: %u\n", g_u32BusOffRecoveryCounter);
+        }
     }
     else
     {
@@ -299,16 +429,16 @@ void CANFD_TxRxTest(void)
         do
         {
             /* Check for any received messages on CAN FD message buffer 0 */
-            if(CANFD_ReadRxBufMsg(g_pCanfd, 0, &sRxMsgFrame) == eCANFD_RECEIVE_SUCCESS)
+            if (CANFD_ReadRxBufMsg(g_pCanfd, 0, &sRxMsgFrame) == eCANFD_RECEIVE_SUCCESS)
             {
                 printf("Rx buf 0: Received message 0x%08X (11-bit)\r\n", sRxMsgFrame.u32Id);
                 printf("Message Data : ");
 
-                for(u8Cnt = 0; u8Cnt < sRxMsgFrame.u32DLC; u8Cnt++)
+                for (u8Cnt = 0; u8Cnt < sRxMsgFrame.u32DLC; u8Cnt++)
                 {
                     printf("%02d ,", sRxMsgFrame.au8Data[u8Cnt]);
 
-                    if(sRxMsgFrame.au8Data[u8Cnt] != u8Cnt + u8RxTestNum)
+                    if (sRxMsgFrame.au8Data[u8Cnt] != u8Cnt + u8RxTestNum)
                     {
                         u8ErrFlag = 1;
                     }
@@ -317,22 +447,22 @@ void CANFD_TxRxTest(void)
                 printf(" \n\n");
 
                 /* Check Standard ID number */
-                if((sRxMsgFrame.u32Id != 0x111) && (sRxMsgFrame.u32Id != 0x22F) && (sRxMsgFrame.u32Id != 0x333))
+                if ((sRxMsgFrame.u32Id != 0x111) && (sRxMsgFrame.u32Id != 0x22F) && (sRxMsgFrame.u32Id != 0x333))
                 {
                     u8ErrFlag = 1;
                 }
 
-                if(u8RxTestNum == 0)      u8RxTempLen = 16;
-                else if(u8RxTestNum == 1) u8RxTempLen = 32;
-                else if(u8RxTestNum == 2) u8RxTempLen = 64;
+                if (u8RxTestNum == 0)      u8RxTempLen = 16;
+                else if (u8RxTestNum == 1) u8RxTempLen = 32;
+                else if (u8RxTestNum == 2) u8RxTempLen = 64;
 
                 /* Check Data length */
-                if((u8RxTempLen != sRxMsgFrame.u32DLC) || (sRxMsgFrame.eIdType != eCANFD_SID))
+                if ((u8RxTempLen != sRxMsgFrame.u32DLC) || (sRxMsgFrame.eIdType != eCANFD_SID))
                 {
                     u8ErrFlag = 1;
                 }
 
-                if(u8ErrFlag == 1)
+                if (u8ErrFlag == 1)
                 {
                     printf("CAN FD STD ID or Data Error \n");
                     getchar();
@@ -342,17 +472,17 @@ void CANFD_TxRxTest(void)
             }
 
             /* Check for any received messages on CAN FD message buffer 1 */
-            if(CANFD_ReadRxBufMsg(g_pCanfd, 1, &sRxMsgFrame) == eCANFD_RECEIVE_SUCCESS)
+            if (CANFD_ReadRxBufMsg(g_pCanfd, 1, &sRxMsgFrame) == eCANFD_RECEIVE_SUCCESS)
             {
 
                 printf("Rx buf 1: Received message 0x%08X (29-bit)\r\n", sRxMsgFrame.u32Id);
                 printf("Message Data : ");
 
-                for(u8Cnt = 0; u8Cnt < sRxMsgFrame.u32DLC; u8Cnt++)
+                for (u8Cnt = 0; u8Cnt < sRxMsgFrame.u32DLC; u8Cnt++)
                 {
                     printf("%02d ,", sRxMsgFrame.au8Data[u8Cnt]);
 
-                    if(sRxMsgFrame.au8Data[u8Cnt] != u8Cnt + u8RxTestNum)
+                    if (sRxMsgFrame.au8Data[u8Cnt] != u8Cnt + u8RxTestNum)
                     {
                         u8ErrFlag = 1;
                     }
@@ -361,22 +491,22 @@ void CANFD_TxRxTest(void)
                 printf(" \n\n");
 
                 /* Check Extend ID number */
-                if((sRxMsgFrame.u32Id  != 0x222) && (sRxMsgFrame.u32Id  != 0x3333) && (sRxMsgFrame.u32Id != 0x44444))
+                if ((sRxMsgFrame.u32Id  != 0x222) && (sRxMsgFrame.u32Id  != 0x3333) && (sRxMsgFrame.u32Id != 0x44444))
                 {
                     u8ErrFlag = 1;
                 }
 
-                if(u8RxTestNum == 3)      u8RxTempLen = 16;
-                else if(u8RxTestNum == 4) u8RxTempLen = 32;
-                else if(u8RxTestNum == 5) u8RxTempLen = 64;
+                if (u8RxTestNum == 3)      u8RxTempLen = 16;
+                else if (u8RxTestNum == 4) u8RxTempLen = 32;
+                else if (u8RxTestNum == 5) u8RxTempLen = 64;
 
                 /* Check Data length */
-                if((u8RxTempLen != sRxMsgFrame.u32DLC) || (sRxMsgFrame.eIdType != eCANFD_XID))
+                if ((u8RxTempLen != sRxMsgFrame.u32DLC) || (sRxMsgFrame.eIdType != eCANFD_XID))
                 {
                     u8ErrFlag = 1;
                 }
 
-                if(u8ErrFlag == 1)
+                if (u8ErrFlag == 1)
                 {
                     printf("CAN FD EXD ID or Data Error \n");
                     getchar();
@@ -385,8 +515,7 @@ void CANFD_TxRxTest(void)
                 u8RxTestNum++;
 
             }
-        }
-        while(u8RxTestNum < 6);
+        } while (u8RxTestNum < 6);
 
         printf("\n Receive OK & Check OK\n");
     }
@@ -433,5 +562,5 @@ int main()
     /* CANFD sample function */
     CANFD_TxRxTest();
 
-    while(1) {}
+    while (1) {}
 }

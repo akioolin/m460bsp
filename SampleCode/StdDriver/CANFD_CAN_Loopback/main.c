@@ -28,7 +28,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-CANFD_T * g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
+CANFD_T *g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
 CANFD_FD_MSG_T      g_sRxMsgFrame;
 CANFD_FD_MSG_T      g_sTxMsgFrame;
 volatile uint8_t   g_u8RxFIFO0CompleteFlag = 0;
@@ -39,30 +39,30 @@ volatile uint8_t   g_u8RxFIFO0CompleteFlag = 0;
 void SYS_Init(void);
 void CANFD_TEST_HANDLE(void);
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void);
+    void CANFD00_IRQHandler(void);
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void);
+    void CANFD10_IRQHandler(void);
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void);
+    void CANFD20_IRQHandler(void);
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #else
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #endif
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* ISR to handle CAN Line 0 interrupt event                                                                */
 /*---------------------------------------------------------------------------------------------------------*/
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void)
+    void CANFD00_IRQHandler(void)
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void)
+    void CANFD10_IRQHandler(void)
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void)
+    void CANFD20_IRQHandler(void)
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #else
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #endif
 {
     CANFD_TEST_HANDLE();
@@ -166,25 +166,25 @@ void CANFD_CAN_TxRx_Test(CANFD_FD_MSG_T *psTxMsg, E_CANFD_ID_TYPE eFrameIdType, 
     /* Set data length */
     psTxMsg->u32DLC = u8Len;
 
-    for(u8Cnt = 0; u8Cnt < psTxMsg->u32DLC; u8Cnt++) psTxMsg->au8Data[u8Cnt] = u8Cnt;
+    for (u8Cnt = 0; u8Cnt < psTxMsg->u32DLC; u8Cnt++) psTxMsg->au8Data[u8Cnt] = u8Cnt;
 
     g_u8RxFIFO0CompleteFlag = 0;
 
     /* Use message buffer 0 */
-    if(eFrameIdType == eCANFD_SID)
+    if (eFrameIdType == eCANFD_SID)
         printf("Send to transmit message 0x%08x (11-bit)\n", psTxMsg->u32Id);
     else
         printf("Send to transmit message 0x%08x (29-bit)\n", psTxMsg->u32Id);
 
-    if(CANFD_TransmitTxMsg(g_pCanfd, 0, psTxMsg) != eCANFD_TRANSMIT_SUCCESS)
+    if (CANFD_TransmitTxMsg(g_pCanfd, 0, psTxMsg) != eCANFD_TRANSMIT_SUCCESS)
     {
         printf("Failed to transmit message\n");
     }
 
     /* Wait the Rx FIFO0 received message */
-    while(!g_u8RxFIFO0CompleteFlag)
+    while (!g_u8RxFIFO0CompleteFlag)
     {
-        if(--u32TimeOutCnt == 0)
+        if (--u32TimeOutCnt == 0)
         {
             printf("Wait for CANFD Rx FIFO0 received message time-out!\n");
             return;
@@ -194,7 +194,7 @@ void CANFD_CAN_TxRx_Test(CANFD_FD_MSG_T *psTxMsg, E_CANFD_ID_TYPE eFrameIdType, 
     printf("Rx FIFO0 : Received message 0x%08X\n", g_sRxMsgFrame.u32Id);
     printf("Message Data : ");
 
-    for(u8Cnt = 0; u8Cnt <  g_sRxMsgFrame.u32DLC; u8Cnt++)
+    for (u8Cnt = 0; u8Cnt <  g_sRxMsgFrame.u32DLC; u8Cnt++)
     {
         printf("%02d ,", g_sRxMsgFrame.au8Data[u8Cnt]);
     }
@@ -211,6 +211,8 @@ void CANFD_CAN_Loopback(void)
     uint8_t u8Loop;
     CANFD_FD_T sCANFD_Config;
 
+    /* Use defined configuration */
+    sCANFD_Config.sElemSize.u32UserDef = 0;
     /* Get the CAN configuration value */
     CANFD_GetDefaultConfig(&sCANFD_Config, CANFD_OP_CAN_MODE);
     /* Enable internal loopback mode */
@@ -232,6 +234,8 @@ void CANFD_CAN_Loopback(void)
     NVIC_EnableIRQ(CANFD30_IRQn);
 #endif
 
+    printf("CAN Nominal bit rate(bps): %d\n", CANFD_GetNominalBitRate(g_pCanfd));
+
     /* Receive 0x110~0x11F in CAN rx FIFO0 buffer by setting mask 0 */
     CANFD_SetSIDFltr(g_pCanfd, 0, CANFD_RX_FIFO0_STD_MASK(0x110, 0x7F0));
     /* Receive 0x22F in CAN rx FIFO0 buffer by setting mask 1 */
@@ -252,7 +256,7 @@ void CANFD_CAN_Loopback(void)
     /* CAN Run to Normal mode */
     CANFD_RunToNormal(g_pCanfd, TRUE);
 
-    for(u8Loop = 1 ; u8Loop < 8; u8Loop++)
+    for (u8Loop = 1 ; u8Loop < 8; u8Loop++)
     {
         CANFD_CAN_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x110 + u8Loop, u8Loop);
     }
@@ -260,7 +264,7 @@ void CANFD_CAN_Loopback(void)
     CANFD_CAN_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x22F, 8);
     CANFD_CAN_TxRx_Test(&g_sTxMsgFrame, eCANFD_SID, 0x333, 8);
 
-    for(u8Loop = 1 ; u8Loop < 8; u8Loop++)
+    for (u8Loop = 1 ; u8Loop < 8; u8Loop++)
     {
         CANFD_CAN_TxRx_Test(&g_sTxMsgFrame, eCANFD_XID, 0x220 + u8Loop, u8Loop);
     }
@@ -316,5 +320,5 @@ int main(void)
 
     printf("\n CANFD%d CAN Mode Loopback Test Done\r\n", ((CANFD_MODULE == 0) ? 0 : (CANFD_MODULE == 1) ? 1 : (CANFD_MODULE == 2) ? 2 : 3));
 
-    while(1) {}
+    while (1) {}
 }
