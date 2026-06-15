@@ -1,6 +1,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
+#include "NuMicro.h"
 #include "lwip/opt.h"//clyus
 #include "lwip_tls.h"
 #include "mqtt-client.h"
@@ -8,11 +9,11 @@
 #include "lwip/netbuf.h"
 #include "mbedtls/ssl.h"
 
-static void __mbedtls_test(void * pv);
+static void __mbedtls_test(void *pv);
 void mqtt_test_init(void);
 
 
-static const char * ca_certificate =
+static const char *ca_certificate =
     "-----BEGIN CERTIFICATE-----\r\n"
     "MIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/\r\n"
     "MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\r\n"
@@ -41,10 +42,10 @@ static const char * ca_certificate =
     "KOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==\r\n"
     "-----END CERTIFICATE-----\r\n";
 
-static void __mbedtls_test(void * pv)
+static void __mbedtls_test(void *pv)
 {
-    static const char * get_host = "GET https://www.howsmyssl.com/a/check HTTP/1.1\nHost: www.howsmyssl.com\n\n";
-    tls_configuration_t * conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
+    static const char *get_host = "GET https://www.howsmyssl.com/a/check HTTP/1.1\nHost: www.howsmyssl.com\n\n";
+    tls_configuration_t *conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
 
     vTaskDelay(2000);
 
@@ -54,9 +55,9 @@ static void __mbedtls_test(void * pv)
 
     //tls_configuration_t * conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
 
-    if(conf)
+    if (conf)
     {
-        tls_context_t * ssl;//clyu
+        tls_context_t *ssl; //clyu
 
         TRACE("conf done");
         lwip_tls_add_certificate(conf, (uint8_t *)ca_certificate, strlen(ca_certificate) + 1);
@@ -64,7 +65,7 @@ static void __mbedtls_test(void * pv)
         //tls_context_t * ssl = lwip_tls_new(conf, NETCONN_TCP);
         ssl = lwip_tls_new(conf, /*(enum netconn_type)*/NETCONN_TCP);
 
-        if(ssl)
+        if (ssl)
         {
             int32_t ret = lwip_tls_connect(ssl, "www.howsmyssl.com", 443);
 
@@ -73,16 +74,16 @@ static void __mbedtls_test(void * pv)
             //int32_t ret = lwip_tls_connect(ssl, "www.howsmyssl.com", 443);
             TRACE("connect:%d", ret);
 
-            if(ret == 0)
+            if (ret == 0)
             {
-                struct netbuf * nbuf;
+                struct netbuf *nbuf;
 
                 lwip_tls_write(ssl, (const uint8_t *)get_host, strlen(get_host), 10000);
 
                 //struct netbuf * nbuf;
-                while((ret = lwip_tls_read(ssl, &nbuf, 0)) == 0)
+                while ((ret = lwip_tls_read(ssl, &nbuf, 0)) == 0)
                 {
-                    if(nbuf)
+                    if (nbuf)
                     {
                         TRACE("lwip_tls_read:\n");
                         TRACE("%s", (char *)nbuf->ptr->payload);
@@ -90,11 +91,13 @@ static void __mbedtls_test(void * pv)
                         nbuf = 0;
                     }
                 }
+
                 lwip_tls_delete(ssl);
                 lwip_tls_delete_conf(conf);
             }
         }
     }
+
     TRACE("Current Heap in LAN before suspend:%d", xPortGetFreeHeapSize());
     vTaskSuspend(NULL);
 }
@@ -103,50 +106,77 @@ static void __mbedtls_test(void * pv)
 
 typedef struct
 {
-    uint32_t port;	//0 to disable
+    uint32_t port;  //0 to disable
     char server[64];
     uint32_t secured;
     char username[128];
     char password[64];
 } _S_MQTT_COMMON;
 
-static _S_MQTT_CLIENT_INFO * subs_cinfo = 0;
+static _S_MQTT_CLIENT_INFO *subs_cinfo = 0;
 static TaskHandle_t subs_tsk_handle = 0;
+static SemaphoreHandle_t mqtt_mutex = 0;
 
-static void __connect_subscribe_failupcall(_S_MQTT_CLIENT_INFO * cinfo)
+static void __connect_subscribe_failupcall(_S_MQTT_CLIENT_INFO *cinfo)
 {
-    TRACE("mqtt recv process could not re-connect when the connection failed");
-    xTaskNotify(subs_tsk_handle, 0, eSetValueWithoutOverwrite);
+    TRACE("mqtt connection failed, notifying main task for reconnection");
+    xTaskNotify(subs_tsk_handle, 1, eSetValueWithOverwrite);
 }
 
-static _S_MQTT_CLIENT_INFO * __client_init(const _S_MQTT_COMMON * s, _S_MQTT_CLIENT_INFO * c,
-        void (*fail_upcall)(_S_MQTT_CLIENT_INFO * cinfo), tls_configuration_t * conf)
+static _S_MQTT_CLIENT_INFO *__client_init(const _S_MQTT_COMMON *s, _S_MQTT_CLIENT_INFO *c,
+                                          void (*fail_upcall)(_S_MQTT_CLIENT_INFO *cinfo), tls_configuration_t *conf)
 {
-    MQTTPacket_connectData * options = 0;
+    MQTTPacket_connectData *options = 0;
 
-    if(c == 0)
+    if (c == 0)
     {
+        TRACE("Initializing new MQTT client...");
         c = mqtt_client_init(1024, 30000, 30000, fail_upcall);
-        if(c)
+
+        if (c)
         {
-            options = mqtt_client_connect_options("agnishant_test", 60, 1, s->username, s->password);
+            TRACE("Creating connection options...");
+            static char unique_client_id[32];
+
+            SYS_UnlockReg();
+            FMC_Open();
+            sprintf(unique_client_id, "NuMaker_%lu", (unsigned long)(FMC_ReadUID(0)^FMC_ReadUID(1)^FMC_ReadUID(2)));
+            FMC_Close();
+            SYS_LockReg();
+
+            TRACE("Using Client ID: %s", unique_client_id);
+            options = mqtt_client_connect_options(unique_client_id, 60, 1, s->username, s->password);
         }
     }
     else
     {
+        TRACE("Reusing existing MQTT client...");
         options = c->options;
     }
-    while(mqtt_client_is_connected(c) == 0)
+
+    TRACE("Checking connection status...");
+
+    while (mqtt_client_is_connected(c) == 0)
     {
+        TRACE("Attempting MQTT connection to %s:%d...", s->server, s->port);
         _E_MQTT_ERRORS err = mqtt_client_connect(c, s->server, s->port, options, conf);
 
+        TRACE("Connection attempt result: %d", err);
         TRACE("mqtt client connect, err:%d", err);
-        if(err == MQTT_ERROR_NONE)
+
+        if (err == MQTT_ERROR_NONE)
         {
+            TRACE("MQTT connection successful!");
             break;
         }
-        vTaskDelay(50000);
+
+        TRACE("Connection failed, retrying in 10 seconds...");
+        vTaskDelay(10000);
     }
+
+    TRACE("Client initialization completed, connection status: %s",
+          mqtt_client_is_connected(c) ? "Connected" : "Disconnected");
+
     return c;
 }
 
@@ -154,16 +184,15 @@ void dump(char *buf, int t, int len)
 {
     int i;
 
-    for(i=0; i<len; i++)
+    for (i = 0; i < len; i++)
     {
-        printf("%c ",buf[i]);
-        //if((i%16==0) &&(i!=0))
-        //	printf("\n");
+        printf("%c ", buf[i]);
     }
+
     printf("\n");
 }
-uint32_t __subscribe_upcall(_S_MQTT_SUBSCRIBE_INFO * sinfo, uint32_t qos, uint32_t dup, uint32_t retained,
-                            void * payload, uint32_t payload_len)
+uint32_t __subscribe_upcall(_S_MQTT_SUBSCRIBE_INFO *sinfo, uint32_t qos, uint32_t dup, uint32_t retained,
+                            void *payload, uint32_t payload_len)
 {
     TRACE("subscribe upcall, qos:%d, dup:%d, retained:%d", qos, dup, retained);
     dump(payload, 0, payload_len);
@@ -171,7 +200,7 @@ uint32_t __subscribe_upcall(_S_MQTT_SUBSCRIBE_INFO * sinfo, uint32_t qos, uint32
     return 1;
 }
 
-static const char * flespi_ca_certificate =
+static const char *flespi_ca_certificate =
     "-----BEGIN CERTIFICATE-----\n"
     "MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkG\n"
     "A1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jv\n"
@@ -196,14 +225,15 @@ static const char * flespi_ca_certificate =
 
 #if 0
 static const _S_MQTT_COMMON mc = {1883, "mqtt.flespi.io", 0, "FlespiToken QILc0P0LwrdSmJvZl2SXBaWXlzFrczlS8XSWAGyWVzE780WhQD4gDO3Mby1dVdTR", 0};
-static void __mqtt_test(void * pv)
+static void __mqtt_test(void *pv)
 {
     TRACE("Current Heap in LAN:%d", xPortGetFreeHeapSize());
     //printf("Current Heap in LAN:%d\n", xPortGetFreeHeapSize());
     //static const _S_MQTT_COMMON mc = {1883, "mqtt.flespi.io", 0, 0, 0};
 
     subs_cinfo = __client_init(&mc, subs_cinfo, __connect_subscribe_failupcall, 0);
-    if(subs_cinfo)
+
+    if (subs_cinfo)
     {
         //mqtt_client_set_publish_info(subs_cinfo,qos,retain);
         //mqtt_client_subscribe(subs_cinfo, "nishant/subs/test", 2, __subscribe_upcall);
@@ -214,52 +244,127 @@ static void __mqtt_test(void * pv)
     {
         //subs_cinfo = __client_init(&mc, subs_cinfo, __connect_subscribe_failupcall, 0);
 
-        if(subs_cinfo)
+        if (subs_cinfo)
         {
             //mqtt_client_subscribe(subs_cinfo, "nishant/subs/test", 2, __subscribe_upcall);
             //mqtt_client_subscribe(subs_cinfo, "office/light1", 2, __subscribe_upcall);
             mqtt_client_publish(subs_cinfo, "my/data", "this is a test", 14, 2);
         }
+
         ulTaskNotifyTake(pdTRUE, /*5000*/portMAX_DELAY);//5s
-    }
-    while(1);
+    } while (1);
 }
 #elif 1//SSL without CA
-//static const _S_MQTT_COMMON mc = {1883, "mqtt.flespi.io", 0, "FlespiToken QILc0P0LwrdSmJvZl2SXBaWXlzFrczlS8XSWAGyWVzE780WhQD4gDO3Mby1dVdTR", 0};
-static const _S_MQTT_COMMON mc = {8883, "mqtt.flespi.io", 1, "FlespiToken goP6bYxBYy7oMJUo2wd5jJcDzWVyYJN3WqXXdim1GjejQYxIkyCt8CUvmFUbdv2Z", 0};
-static void __mqtt_test(void * pv)
+//FlespiToken is for testing only; users must obtain a unique token. https://flespi.com/
+static const _S_MQTT_COMMON mc = {8883, "mqtt.flespi.io", 1, "FlespiToken pJad9nrl7PtYbprccjrDbldYmEzPia4thANDYPB8JLtPDv1e3p0GtvhqPWYz6t4P", 0};
+static void __mqtt_test(void *pv)
 {
-    tls_configuration_t * conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_NONE, ENDNODE_CLIENT);
-    tls_context_t * ssl;//clyu
+    tls_configuration_t *conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_NONE, ENDNODE_CLIENT);
+    tls_context_t *ssl; //clyu
+
+    // Create mutex for MQTT operations
+    mqtt_mutex = xSemaphoreCreateMutex();
+
+    if (mqtt_mutex == NULL)
+    {
+        TRACE("Failed to create MQTT mutex!");
+        vTaskSuspend(NULL);
+        return;
+    }
 
     TRACE("Current Heap in LAN:%d", xPortGetFreeHeapSize());
+    TRACE("Starting MQTT client initialization...");
+
     subs_cinfo = __client_init(&mc, subs_cinfo, __connect_subscribe_failupcall, conf);
 
-    if(subs_cinfo)
+    if (subs_cinfo)
     {
-        mbedtls_ssl_set_hostname((mbedtls_ssl_context *)subs_cinfo->ti->ssl,"mqtt.flespi.io");
+        TRACE("MQTT client connected successfully!");
+        mbedtls_ssl_set_hostname((mbedtls_ssl_context *)subs_cinfo->ti->ssl, "mqtt.flespi.io");
         //mqtt_client_subscribe(subs_cinfo, "nishant/subs/test", 2, __subscribe_upcall);
+        TRACE("Subscribing to office/light1...");
         mqtt_client_subscribe(subs_cinfo, "office/light1", 2, __subscribe_upcall);
+        TRACE("Subscription completed, starting publish loop...");
     }
+    else
+    {
+        TRACE("MQTT client initialization failed!");
+        vTaskSuspend(NULL);
+        return;
+    }
+
     do
     {
+        // Check for notifications from MQTT recv process
+        uint32_t notification_value = 0;
 
-        if(subs_cinfo)
+        if (xTaskNotifyWait(0, ULONG_MAX, &notification_value, 0) == pdTRUE)
         {
-            mqtt_client_publish(subs_cinfo, "my/data", "this is a test", 14, 2);
+            TRACE("Received notification: connection failure detected by recv process");
         }
-        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    }
-    while(1);
+
+        if (xSemaphoreTake(mqtt_mutex, pdMS_TO_TICKS(1000)) == pdTRUE)
+        {
+            // Always check connection status, even if subs_cinfo is NULL
+            if (subs_cinfo && mqtt_client_is_connected(subs_cinfo))
+            {
+                TRACE("MQTT Client is connected. Publishing messages...");
+                static uint32_t test_counter = 0;
+                test_counter++;
+
+                char simple_msg[64];
+                sprintf(simple_msg, "Test message #%lu from device", (unsigned long)test_counter);
+                TRACE("Publishing: '%s' to topic 'test/message'", simple_msg);
+                _E_MQTT_ERRORS result1 = mqtt_client_publish(subs_cinfo, "test/message", simple_msg, strlen(simple_msg), 0);
+                TRACE("Result: %d", result1);
+
+                // If publish fails, treat as disconnection
+                if (result1 != MQTT_ERROR_NONE)
+                {
+                    TRACE("Publish failed with error %d, treating as disconnection", result1);
+                    // Force reconnection on next iteration
+                }
+            }
+            else
+            {
+                // Either subs_cinfo is NULL or not connected - attempt reconnection
+                TRACE("MQTT client disconnected! Attempting reconnection...");
+
+                /*
+                 * On a connection drop _mqtt_recv_process (mqtt-client.c) does not delete
+                 * itself: it tears down the TCP/TLS layer (info->ti = 0) and then parks in a
+                 * wait loop.
+                 */
+                TRACE("Creating new client for reconnection...");
+                subs_cinfo = __client_init(&mc, NULL, __connect_subscribe_failupcall, conf);
+
+                if (subs_cinfo && mqtt_client_is_connected(subs_cinfo))
+                {
+                    TRACE("Reconnection successful, re-subscribing to topics...");
+                    mqtt_client_subscribe(subs_cinfo, "office/light1", 2, __subscribe_upcall);
+                }
+                else
+                {
+                    TRACE("Reconnection failed, will retry in next cycle");
+                }
+            }
+
+            xSemaphoreGive(mqtt_mutex);
+        }
+
+        // Wait 10 seconds or receive notification for faster reconnection
+        TRACE("Waiting for next publish cycle...");
+        ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(10000));
+    } while (1);
 
 }
 #elif 0
 //static const _S_MQTT_COMMON mc = {1883, "mqtt.flespi.io", 0, "FlespiToken QILc0P0LwrdSmJvZl2SXBaWXlzFrczlS8XSWAGyWVzE780WhQD4gDO3Mby1dVdTR", 0};
 static const _S_MQTT_COMMON mc = {8883, "mqtt.flespi.io", 1, "FlespiToken QILc0P0LwrdSmJvZl2SXBaWXlzFrczlS8XSWAGyWVzE780WhQD4gDO3Mby1dVdTR", 0};
-static void __mqtt_test(void * pv)
+static void __mqtt_test(void *pv)
 {
-    tls_configuration_t * conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
-    tls_context_t * ssl;//clyu
+    tls_configuration_t *conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
+    tls_context_t *ssl; //clyu
 
     TRACE("Current Heap in LAN:%d", xPortGetFreeHeapSize());
 
@@ -270,16 +375,18 @@ static void __mqtt_test(void * pv)
     {
         subs_cinfo = __client_init(&mc, subs_cinfo, __connect_subscribe_failupcall, conf);
 
-        if(subs_cinfo)
+        if (subs_cinfo)
         {
             //mbedtls_ssl_set_hostname("mqtt.flespi.io");
             //mqtt_client_subscribe(subs_cinfo, "nishant/subs/test", 2, __subscribe_upcall);
             mqtt_client_subscribe(subs_cinfo, "office/light1", 1, __subscribe_upcall);
             //mqtt_client_publish(subs_cinfo, "my/data", "this is a test", 14, 2);
         }
+
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
     } //while(1);
-    while(1);
+
+    while (1);
 }
 
 #elif 1//Amazon
@@ -320,10 +427,10 @@ static const char clientcredentialCLIENT_PRIVATE_KEY_PEM[] = "Paste client priva
 
 
 static const _S_MQTT_COMMON mc = {8883, "Paste AWS IoT Broker endpoint here.", 1, 0, 0};
-static void __mqtt_test(void * pv)
+static void __mqtt_test(void *pv)
 {
-    tls_configuration_t * conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
-    tls_context_t * ssl;//clyu
+    tls_configuration_t *conf = lwip_tls_new_conf(TLS_AUTH_SSL_VERIFY_OPTIONAL, ENDNODE_CLIENT);
+    tls_context_t *ssl; //clyu
 
     TRACE("Current Heap in LAN:%d", xPortGetFreeHeapSize());
 
@@ -331,22 +438,23 @@ static void __mqtt_test(void * pv)
     lwip_tls_add_clientcertificate(conf, (uint8_t *)clientcredentialCLIENT_CERTIFICATE_PEM, strlen(clientcredentialCLIENT_CERTIFICATE_PEM) + 1);
     lwip_tls_add_private_key(conf, (uint8_t *)clientcredentialCLIENT_PRIVATE_KEY_PEM, strlen(clientcredentialCLIENT_PRIVATE_KEY_PEM) + 1);
 
-    TRACE("01Current Heap in LAN:%d,root ca %d, client ca %d, private key %d", xPortGetFreeHeapSize(),strlen(tlsATS1_ROOT_CERTIFICATE_PEM),
+    TRACE("01Current Heap in LAN:%d,root ca %d, client ca %d, private key %d", xPortGetFreeHeapSize(), strlen(tlsATS1_ROOT_CERTIFICATE_PEM),
           strlen(clientcredentialCLIENT_CERTIFICATE_PEM),
           strlen(clientcredentialCLIENT_PRIVATE_KEY_PEM));
     {
         subs_cinfo = __client_init(&mc, subs_cinfo, __connect_subscribe_failupcall, conf);
 
-        if(subs_cinfo)
+        if (subs_cinfo)
         {
             //mqtt_client_subscribe(subs_cinfo, "nishant/subs/test", 2, __subscribe_upcall);
             mqtt_client_subscribe(subs_cinfo, "office/light1", 1, __subscribe_upcall);
             //mqtt_client_publish(subs_cinfo, "my/data", "this is a test", 14, 2);
         }
+
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
     }
 
-    while(1);
+    while (1);
 }
 #endif
 
@@ -361,7 +469,7 @@ void mbedtls_test_init(void)
     xTaskCreate(__mbedtls_test, "Mbed TLS", 4000, NULL, 2, &subs_tsk_handle);
 }
 
-ip_addr_t mqtt_get_interface_ip(ip_addr_t * dest)
+ip_addr_t mqtt_get_interface_ip(ip_addr_t *dest)
 {
     return ip_addr_any;
 }

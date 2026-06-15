@@ -44,14 +44,14 @@
 
 /* Ensure stdint is only used by the compiler, and not the assembler. */
 #if defined( __ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
-#include <stdint.h>
-extern uint32_t SystemCoreClock;
+    #include <stdint.h>
+    extern uint32_t SystemCoreClock;
 #endif
 
 #if (defined(__ARMCC_VERSION) || defined(__GNUC__))
-#define TRACE(...) {printf(__VA_ARGS__); printf("\n");}//clyu
+    #define TRACE(...) {printf(__VA_ARGS__); printf("\n");}//clyu
 #else
-#define TRACE   printf
+    #define TRACE   printf
 #endif
 
 
@@ -62,10 +62,10 @@ extern uint32_t SystemCoreClock;
 #define configTICK_RATE_HZ              ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES            ( 5 )
 #define configMINIMAL_STACK_SIZE        ( ( unsigned short ) 120)
-#if	LWIP_ENABLE_CLIENT_CA == 1
-#define configTOTAL_HEAP_SIZE           ( ( size_t ) (75 * 1024 ) )//75 for Amazon clyu
+#if LWIP_ENABLE_CLIENT_CA == 1
+    #define configTOTAL_HEAP_SIZE           ( ( size_t ) (256 * 1024 ) )//75 for Amazon clyu, 256 for flespi
 #else
-#define configTOTAL_HEAP_SIZE           ( ( size_t ) (64 * 1024 ) )//75/85 for Amazon
+    #define configTOTAL_HEAP_SIZE           ( ( size_t ) (64 * 1024 ) )//75/85 for Amazon
 #endif
 #define configMAX_TASK_NAME_LEN         ( 16 )
 #define configUSE_TRACE_FACILITY        1
@@ -74,9 +74,9 @@ extern uint32_t SystemCoreClock;
 #define configUSE_MUTEXES               1
 #define configQUEUE_REGISTRY_SIZE       8
 #if defined(__ICCARM__)
-#define configCHECK_FOR_STACK_OVERFLOW  0   // IAR
+    #define configCHECK_FOR_STACK_OVERFLOW  0   // IAR
 #else
-#define configCHECK_FOR_STACK_OVERFLOW  2   // Keil
+    #define configCHECK_FOR_STACK_OVERFLOW  2   // Keil
 #endif
 #define configUSE_RECURSIVE_MUTEXES     1
 #define configUSE_MALLOC_FAILED_HOOK    1
@@ -107,10 +107,10 @@ to exclude the API function. */
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
-/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
-#define configPRIO_BITS             __NVIC_PRIO_BITS
+    /* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */
+    #define configPRIO_BITS             __NVIC_PRIO_BITS
 #else
-#define configPRIO_BITS             4        /* 15 priority levels */
+    #define configPRIO_BITS             4        /* 15 priority levels */
 #endif
 
 /* The lowest interrupt priority that can be used in a call to a "set priority"

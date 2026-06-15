@@ -28,7 +28,7 @@
 /*---------------------------------------------------------------------------------------------------------*/
 /* Global variables                                                                                        */
 /*---------------------------------------------------------------------------------------------------------*/
-CANFD_T * g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
+CANFD_T *g_pCanfd = ((CANFD_MODULE == 0) ? CANFD0 : (CANFD_MODULE == 1) ? CANFD1 : (CANFD_MODULE == 2) ? CANFD2 : CANFD3);
 CANFD_FD_MSG_T   g_sRxFIFO0MsgFrame[3];
 CANFD_FD_MSG_T   g_sRxFIFO1MsgFrame[3];
 uint8_t g_u8RxFIFO0RcvOk = 0;
@@ -45,55 +45,55 @@ uint32_t Get_CANFD_NominalBitRate(CANFD_T *psCanfd);
 uint32_t Get_CANFD_DataBitRate(CANFD_T *psCanfd);
 void CANFD_ShowMsg(CANFD_FD_MSG_T *sRxMsg);
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void);
+    void CANFD00_IRQHandler(void);
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void);
+    void CANFD10_IRQHandler(void);
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void);
+    void CANFD20_IRQHandler(void);
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #else
-void CANFD30_IRQHandler(void);
+    void CANFD30_IRQHandler(void);
 #endif
 
 /*---------------------------------------------------------------------------------------------------------*/
 /* ISR to handle CAN FD Line 0 interrupt event                                                             */
 /*---------------------------------------------------------------------------------------------------------*/
 #if (CANFD_MODULE == 0)
-void CANFD00_IRQHandler(void)
+    void CANFD00_IRQHandler(void)
 #elif (CANFD_MODULE == 1)
-void CANFD10_IRQHandler(void)
+    void CANFD10_IRQHandler(void)
 #elif (CANFD_MODULE == 2)
-void CANFD20_IRQHandler(void)
+    void CANFD20_IRQHandler(void)
 #elif (CANFD_MODULE == 3)
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #else
-void CANFD30_IRQHandler(void)
+    void CANFD30_IRQHandler(void)
 #endif
 {
     /* Rx FIFO 0 New Message Interrupt */
-    if(g_pCanfd->IR & CANFD_IR_RF0N_Msk)
+    if (g_pCanfd->IR & CANFD_IR_RF0N_Msk)
     {
         g_u8RxFIFO0RcvOk = 1;
         CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_RF0N_Msk);
     }
 
     /* Rx FIFO 1 New Message Interrupt */
-    if(g_pCanfd->IR & CANFD_IR_RF1N_Msk)
+    if (g_pCanfd->IR & CANFD_IR_RF1N_Msk)
     {
         g_u8RxFIFO1RcvOk = 1;
         CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_RF1N_Msk);
     }
 
     /* Rx FIFO 0 Message Lost Interrupt */
-    if(g_pCanfd->IR & CANFD_IR_RF0L_Msk)
+    if (g_pCanfd->IR & CANFD_IR_RF0L_Msk)
     {
         printf("Rx FIFO 0 Message Lost(Standard ID)\n");
         CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_RF0L_Msk);
     }
 
     /* Rx FIFO 1 Message Lost Interrupt */
-    if(g_pCanfd->IR & CANFD_IR_RF1L_Msk)
+    if (g_pCanfd->IR & CANFD_IR_RF1L_Msk)
     {
         printf("Rx FIFO 1 Message Lost(Extended ID)\n");
         CANFD_ClearStatusFlag(g_pCanfd, CANFD_IR_RF1L_Msk);
@@ -108,113 +108,19 @@ void CANFD_ShowMsg(CANFD_FD_MSG_T *sRxMsg)
     uint8_t u8Cnt;
 
     /* Show the message information */
-    if(sRxMsg->eIdType == eCANFD_SID)
+    if (sRxMsg->eIdType == eCANFD_SID)
         printf("Rx buf 0: ID = 0x%08X(11-bit), DLC = %d\n", sRxMsg->u32Id, sRxMsg->u32DLC);
     else
         printf("Rx buf 1: ID = 0x%08X(29-bit), DLC = %d\n", sRxMsg->u32Id, sRxMsg->u32DLC);
 
     printf("Message Data : ");
 
-    for(u8Cnt = 0; u8Cnt < sRxMsg->u32DLC; u8Cnt++)
+    for (u8Cnt = 0; u8Cnt < sRxMsg->u32DLC; u8Cnt++)
     {
         printf("%02u ,", sRxMsg->au8Data[u8Cnt]);
     }
 
     printf("\n\n");
-}
-
-/*---------------------------------------------------------------------------*/
-/* Get the CAN FD interface Nominal bit rate Function                        */
-/*---------------------------------------------------------------------------*/
-uint32_t Get_CANFD_NominalBitRate(CANFD_T *psCanfd)
-{
-    uint32_t u32BitRate = 0;
-    uint32_t u32CanClk  = 0;
-    uint32_t u32CanDiv  = 0;
-    uint8_t  u8Tq = 0;
-    uint8_t  u8NtSeg1 = 0;
-    uint8_t  u8NtSeg2 = 0;
-
-#if (CANFD_MODULE == 0)
-    if(CLK_GetModuleClockSource(CANFD0_MODULE) == (CLK_CLKSEL0_CANFD0SEL_HCLK >> CLK_CLKSEL0_CANFD0SEL_Pos))
-#elif (CANFD_MODULE == 1)
-    if(CLK_GetModuleClockSource(CANFD1_MODULE) == (CLK_CLKSEL0_CANFD1SEL_HCLK >> CLK_CLKSEL0_CANFD1SEL_Pos))
-#elif (CANFD_MODULE == 2)
-    if(CLK_GetModuleClockSource(CANFD2_MODULE) == (CLK_CLKSEL0_CANFD2SEL_HCLK >> CLK_CLKSEL0_CANFD2SEL_Pos))
-#elif (CANFD_MODULE == 3)
-    if(CLK_GetModuleClockSource(CANFD3_MODULE) == (CLK_CLKSEL0_CANFD3SEL_HCLK >> CLK_CLKSEL0_CANFD3SEL_Pos))
-#else
-    if(CLK_GetModuleClockSource(CANFD3_MODULE) == (CLK_CLKSEL0_CANFD3SEL_HCLK >> CLK_CLKSEL0_CANFD3SEL_Pos))
-#endif
-        u32CanClk = CLK_GetHCLKFreq();
-    else
-        u32CanClk = CLK_GetHXTFreq();
-
-#if (CANFD_MODULE == 0)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD0DIV_Msk) >> CLK_CLKDIV5_CANFD0DIV_Pos) + 1;
-#elif (CANFD_MODULE == 1)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD1DIV_Msk) >> CLK_CLKDIV5_CANFD1DIV_Pos) + 1;
-#elif (CANFD_MODULE == 2)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD2DIV_Msk) >> CLK_CLKDIV5_CANFD2DIV_Pos) + 1;
-#elif (CANFD_MODULE == 3)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD3DIV_Msk) >> CLK_CLKDIV5_CANFD3DIV_Pos) + 1;
-#else
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD3DIV_Msk) >> CLK_CLKDIV5_CANFD3DIV_Pos) + 1;
-#endif
-    u32CanClk = u32CanClk / u32CanDiv;
-    u8Tq = ((psCanfd->NBTP & CANFD_NBTP_NBRP_Msk) >> CANFD_NBTP_NBRP_Pos) + 1 ;
-    u8NtSeg1 = ((psCanfd->NBTP & CANFD_NBTP_NTSEG1_Msk) >> CANFD_NBTP_NTSEG1_Pos);
-    u8NtSeg2 = ((psCanfd->NBTP & CANFD_NBTP_NTSEG2_Msk) >> CANFD_NBTP_NTSEG2_Pos);
-    u32BitRate = u32CanClk / u8Tq / (u8NtSeg1 + u8NtSeg2 + 3);
-
-    return u32BitRate;
-}
-
-/*---------------------------------------------------------------------------*/
-/* Get the CAN FD interface Data bit rate Function                           */
-/*---------------------------------------------------------------------------*/
-uint32_t Get_CANFD_DataBitRate(CANFD_T *psCanfd)
-{
-    uint32_t u32BitRate = 0;
-    uint32_t u32CanClk  = 0;
-    uint32_t u32CanDiv  = 0;
-    uint8_t  u8Tq = 0;
-    uint8_t  u8NtSeg1 = 0;
-    uint8_t  u8NtSeg2 = 0;
-
-#if (CANFD_MODULE == 0)
-    if(CLK_GetModuleClockSource(CANFD0_MODULE) == (CLK_CLKSEL0_CANFD0SEL_HCLK >> CLK_CLKSEL0_CANFD0SEL_Pos))
-#elif (CANFD_MODULE == 1)
-    if(CLK_GetModuleClockSource(CANFD1_MODULE) == (CLK_CLKSEL0_CANFD1SEL_HCLK >> CLK_CLKSEL0_CANFD1SEL_Pos))
-#elif (CANFD_MODULE == 2)
-    if(CLK_GetModuleClockSource(CANFD2_MODULE) == (CLK_CLKSEL0_CANFD2SEL_HCLK >> CLK_CLKSEL0_CANFD2SEL_Pos))
-#elif (CANFD_MODULE == 3)
-    if(CLK_GetModuleClockSource(CANFD3_MODULE) == (CLK_CLKSEL0_CANFD3SEL_HCLK >> CLK_CLKSEL0_CANFD3SEL_Pos))
-#else
-    if(CLK_GetModuleClockSource(CANFD3_MODULE) == (CLK_CLKSEL0_CANFD3SEL_HCLK >> CLK_CLKSEL0_CANFD3SEL_Pos))
-#endif
-        u32CanClk = CLK_GetHCLKFreq();
-    else
-        u32CanClk = CLK_GetHXTFreq();
-
-#if (CANFD_MODULE == 0)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD0DIV_Msk) >> CLK_CLKDIV5_CANFD0DIV_Pos) + 1;
-#elif (CANFD_MODULE == 1)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD1DIV_Msk) >> CLK_CLKDIV5_CANFD1DIV_Pos) + 1;
-#elif (CANFD_MODULE == 2)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD2DIV_Msk) >> CLK_CLKDIV5_CANFD2DIV_Pos) + 1;
-#elif (CANFD_MODULE == 3)
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD3DIV_Msk) >> CLK_CLKDIV5_CANFD3DIV_Pos) + 1;
-#else
-    u32CanDiv = ((CLK->CLKDIV5 & CLK_CLKDIV5_CANFD3DIV_Msk) >> CLK_CLKDIV5_CANFD3DIV_Pos) + 1;
-#endif
-    u32CanClk = u32CanClk / u32CanDiv;
-    u8Tq = ((psCanfd->DBTP & CANFD_DBTP_DBRP_Msk) >> CANFD_DBTP_DBRP_Pos) + 1 ;
-    u8NtSeg1 = ((psCanfd->DBTP & CANFD_DBTP_DTSEG1_Msk) >> CANFD_DBTP_DTSEG1_Pos);
-    u8NtSeg2 = ((psCanfd->DBTP & CANFD_DBTP_DTSEG2_Msk) >> CANFD_DBTP_DTSEG2_Pos);
-    u32BitRate = u32CanClk / u8Tq / (u8NtSeg1 + u8NtSeg2 + 3);
-
-    return u32BitRate;
 }
 
 void SYS_Init(void)
@@ -310,6 +216,8 @@ void CANFD_MonitorMode_Init(uint32_t u32NormBitRate, uint32_t u32DataBitRate)
 {
     CANFD_FD_T sCANFD_Config;
 
+    /* Use defined configuration */
+    sCANFD_Config.sElemSize.u32UserDef = 0;
     CANFD_GetDefaultConfig(&sCANFD_Config, CANFD_OP_CAN_FD_MODE);
     sCANFD_Config.sBtConfig.sNormBitRate.u32BitRate = u32NormBitRate;
     sCANFD_Config.sBtConfig.sDataBitRate.u32BitRate = u32DataBitRate;
@@ -327,8 +235,8 @@ void CANFD_MonitorMode_Init(uint32_t u32NormBitRate, uint32_t u32DataBitRate)
     NVIC_EnableIRQ(CANFD30_IRQn);
 #endif
 
-    printf("CAN FD monitoring Nominal baud rate(bps): %d\n", Get_CANFD_NominalBitRate(g_pCanfd));
-    printf("CAN FD monitoring Data baud rate(bps): %d\n", Get_CANFD_DataBitRate(g_pCanfd));
+    printf("CAN FD monitoring Nominal baud rate(bps): %d\n", CANFD_GetNominalBitRate(g_pCanfd));
+    printf("CAN FD monitoring Data baud rate(bps): %d\n", CANFD_GetDataBitRate(g_pCanfd));
     /* Enable the Bus Monitoring Mode */
     g_pCanfd->CCCR |= CANFD_CCCR_MON_Msk;
 
@@ -410,11 +318,11 @@ int main(void)
     /* CANFD interface initialization */
     CANFD_MonitorMode_Init(1000000, 4000000);
 
-    while(1)
+    while (1)
     {
-        if(g_u8RxFIFO0RcvOk == 1)
+        if (g_u8RxFIFO0RcvOk == 1)
         {
-            if(g_u8RxFIFO0MsgIndex > 2)
+            if (g_u8RxFIFO0MsgIndex > 2)
                 g_u8RxFIFO0MsgIndex = 0;
 
             /* Receive the Rx FIFO0 message(Standard ID) */
@@ -423,15 +331,15 @@ int main(void)
             g_u8RxFIFO0RcvOk = 0;
         }
 
-        if(g_u8RxFIFO0RcvOk == 0 && g_u8RxFIFO0MsgIndex != 0)
+        if (g_u8RxFIFO0RcvOk == 0 && g_u8RxFIFO0MsgIndex != 0)
         {
             CANFD_ShowMsg(&g_sRxFIFO0MsgFrame[g_u8RxFIFO0MsgIndex - 1]);
             g_u8RxFIFO0MsgIndex--;
         }
 
-        if(g_u8RxFIFO1RcvOk == 1)
+        if (g_u8RxFIFO1RcvOk == 1)
         {
-            if(g_u8RxFIFO1MsgIndex > 2)
+            if (g_u8RxFIFO1MsgIndex > 2)
                 g_u8RxFIFO1MsgIndex = 0;
 
             /* Receive the Rx FIFO1 message(Extended ID) */
@@ -440,7 +348,7 @@ int main(void)
             g_u8RxFIFO1RcvOk = 0;
         }
 
-        if(g_u8RxFIFO1RcvOk == 0 && g_u8RxFIFO1MsgIndex != 0)
+        if (g_u8RxFIFO1RcvOk == 0 && g_u8RxFIFO1MsgIndex != 0)
         {
             CANFD_ShowMsg(&g_sRxFIFO1MsgFrame[g_u8RxFIFO1MsgIndex - 1]);
             g_u8RxFIFO1MsgIndex--;

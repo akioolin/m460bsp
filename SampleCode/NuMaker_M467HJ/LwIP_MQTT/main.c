@@ -62,16 +62,16 @@
 
 /* Priorities for the demo application tasks. */
 #if 0
-#define mainFLASH_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
-#define mainQUEUE_POLL_PRIORITY            ( tskIDLE_PRIORITY + 2UL )
-#define mainSEM_TEST_PRIORITY              ( tskIDLE_PRIORITY + 1UL )
-#define mainBLOCK_Q_PRIORITY               ( tskIDLE_PRIORITY + 2UL )
-#define mainCHECK_TASK_PRIORITY            ( tskIDLE_PRIORITY + 3UL )
+    #define mainFLASH_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
+    #define mainQUEUE_POLL_PRIORITY            ( tskIDLE_PRIORITY + 2UL )
+    #define mainSEM_TEST_PRIORITY              ( tskIDLE_PRIORITY + 1UL )
+    #define mainBLOCK_Q_PRIORITY               ( tskIDLE_PRIORITY + 2UL )
+    #define mainCHECK_TASK_PRIORITY            ( tskIDLE_PRIORITY + 3UL )
 #else
-#define mainFLASH_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
-#define mainQUEUE_POLL_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
-#define mainSEM_TEST_PRIORITY              ( tskIDLE_PRIORITY + 1UL )
-#define mainCHECK_TASK_PRIORITY            ( tskIDLE_PRIORITY + 3UL )
+    #define mainFLASH_TASK_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
+    #define mainQUEUE_POLL_PRIORITY            ( tskIDLE_PRIORITY + 1UL )
+    #define mainSEM_TEST_PRIORITY              ( tskIDLE_PRIORITY + 1UL )
+    #define mainCHECK_TASK_PRIORITY            ( tskIDLE_PRIORITY + 3UL )
 #endif
 
 #define mainCHECK_TASK_STACK_SIZE            ( configMINIMAL_STACK_SIZE )
@@ -103,7 +103,7 @@ information. */
 #define mainCREATE_SIMPLE_LED_FLASHER_DEMO_ONLY        0
 
 #if LWIP_DHCP
-#include "lwip/dhcp.h"
+    #include "lwip/dhcp.h"
 #endif
 /*-----------------------------------------------------------*/
 
@@ -145,7 +145,7 @@ int main(void)
     insufficient FreeRTOS heap memory available for the idle and/or timer tasks
     to be created.  See the memory management section on the FreeRTOS web site
     for more details. */
-    for(;;);
+    for (;;);
 }
 /*-----------------------------------------------------------*/
 
@@ -211,7 +211,8 @@ void vApplicationMallocFailedHook(void)
     to query the size of free heap space that remains (although it does not
     provide information on how the remaining heap might be fragmented). */
     taskDISABLE_INTERRUPTS();
-    for(;;);
+
+    for (;;);
 }
 /*-----------------------------------------------------------*/
 
@@ -238,7 +239,8 @@ void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName)
     configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
     function is called if a stack overflow is detected. */
     taskDISABLE_INTERRUPTS();
-    for(;;);
+
+    for (;;);
 }
 /*-----------------------------------------------------------*/
 
@@ -276,7 +278,7 @@ static void vMqttTask(void *pvParameters)
 #endif
 
     tcpip_init(NULL, NULL);
-    lwip_tls_init();//clyu
+    lwip_tls_init();
 
     netif_add(&netif, &ipaddr, &netmask, &gw, NULL, ethernetif_init, tcpip_input);
 
@@ -286,9 +288,9 @@ static void vMqttTask(void *pvParameters)
 #if LWIP_DHCP
     printf("DHCP starting ...\n");
 
-    if(dhcp_start(&netif) == ERR_OK)
+    if (dhcp_start(&netif) == ERR_OK)
     {
-        while(dhcp_supplied_address(&netif) == 0)
+        while (dhcp_supplied_address(&netif) == 0)
         {
             vTaskDelay(5000);
             break;
@@ -297,8 +299,10 @@ static void vMqttTask(void *pvParameters)
     else
     {
         printf("DHCP fail\n");
-        while(1) {}
+
+        while (1) {}
     }
+
 #endif
 
     printf("[ MQTT_Client ] \n");
@@ -306,10 +310,11 @@ static void vMqttTask(void *pvParameters)
     printf("Subnet mask:     %s\n", ip4addr_ntoa(&netif.netmask));
     printf("Default gateway: %s\n", ip4addr_ntoa(&netif.gw));
 
-    if((uint32_t)netif.ip_addr.addr == 0)
+    if ((uint32_t)netif.ip_addr.addr == 0)
     {
         printf("Get IP fail\n");
-        while(1) {}
+
+        while (1) {}
     }
 
     mqtt_test_init();

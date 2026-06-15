@@ -196,7 +196,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805345829</id>
+			<id>1780022953007</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -205,7 +205,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805345866</id>
+			<id>1780022953025</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -214,7 +214,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805345885</id>
+			<id>1780022953049</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -223,7 +223,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805345910</id>
+			<id>1780022953078</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -232,7 +232,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805345981</id>
+			<id>1780022953122</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
@@ -241,12 +241,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1545805346003</id>
+			<id>1780022953153</id>
 			<name>Library/Library</name>
 			<type>5</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-crypto.c</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1780022953175</id>
+			<name>Library/Library</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-fmc.c</arguments>
 			</matcher>
 		</filter>
 		<filter>

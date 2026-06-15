@@ -53,14 +53,14 @@
 #define LWIP_RAND                       xTaskGetTickCount
 
 #if defined ( __GNUC__ ) && !(__CC_ARM) && !(__ICCARM__) && !defined(__ARMCC_VERSION)
-#define LWIP_TIMEVAL_PRIVATE            0
-#include <sys/time.h>   //Include the correct header file that defines struct timeval.
+    #define LWIP_TIMEVAL_PRIVATE            0
+    #include <sys/time.h>   //Include the correct header file that defines struct timeval.
 #endif
 
 #define TCPIP_THREAD_STACKSIZE          2048
 #define TCPIP_THREAD_PRIO               4
 #define TCPIP_MBOX_SIZE                 64
-#define RX_THREAD_STACKSIZE             1024 
+#define RX_THREAD_STACKSIZE             1024
 #define RX_THREAD_PRIO                  2
 #define DEFAULT_TCP_RECVMBOX_SIZE       16
 #define DEFAULT_ACCEPTMBOX_SIZE         16
@@ -97,14 +97,14 @@
 /* ---------- Checksum options ---------- */
 #define LWIP_USING_HW_CHECKSUM          0
 #if (LWIP_USING_HW_CHECKSUM == 1)
-#define CHECKSUM_GEN_IP                 0
-#define CHECKSUM_GEN_UDP                0
-#define CHECKSUM_GEN_TCP                0
-#define CHECKSUM_GEN_ICMP               0
-#define CHECKSUM_CHECK_IP               0
-#define CHECKSUM_CHECK_UDP              0
-#define CHECKSUM_CHECK_TCP              0
-#define CHECKSUM_CHECK_ICMP             0
+    #define CHECKSUM_GEN_IP                 0
+    #define CHECKSUM_GEN_UDP                0
+    #define CHECKSUM_GEN_TCP                0
+    #define CHECKSUM_GEN_ICMP               0
+    #define CHECKSUM_CHECK_IP               0
+    #define CHECKSUM_CHECK_UDP              0
+    #define CHECKSUM_CHECK_TCP              0
+    #define CHECKSUM_CHECK_ICMP             0
 #endif
 
 #endif /* __LWIPOPTS_H__ */

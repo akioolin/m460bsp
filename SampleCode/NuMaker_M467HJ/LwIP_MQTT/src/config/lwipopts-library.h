@@ -117,7 +117,7 @@
 /**
  * LWIP_DHCP==1: Enable DHCP module.
  */
-#define LWIP_DHCP                       0 //clyu
+#define LWIP_DHCP                       1 //clyu
 
 /**
  * LWIP_DNS==1: Turn on DNS module. UDP must be available for DNS
@@ -198,7 +198,7 @@
  * TCP_MSS/4: Try to create 4 fragments or less per TCP packet.
  */
 #define TCP_OVERSIZE                    TCP_MSS
-//#if 0
+
 /**
  * LWIP_NETIF_HOSTNAME==1: use DHCP_OPTION_HOSTNAME with netif's hostname
  * field.
@@ -216,7 +216,7 @@
  * when a netif has been removed
  */
 #define LWIP_NETIF_REMOVE_CALLBACK      1
-//#if 0
+
 /**
  * LWIP_NETIF_TX_SINGLE_PBUF: if this is set to 1, lwIP tries to put all data
  * to be sent into one single pbuf. This is for compatibility with DMA-enabled
@@ -227,7 +227,7 @@
  * @todo: TCP and IP-frag do not work with this, yet:
  */
 //#define LWIP_NETIF_TX_SINGLE_PBUF             1//clyu http can't connect
-//#if 0
+
 /**
  * TCPIP_THREAD_STACKSIZE: The stack size used by the main tcpip thread.
  * The stack size value itself is platform-dependent, but is passed to
@@ -248,7 +248,7 @@
  * sys_mbox_new() when tcpip_init is called.
  */
 //#define TCPIP_MBOX_SIZE                 15
-//#if 0
+
 /**
  * Define this to something that triggers a watchdog. This is called from
  * tcpip_thread after processing a message.
@@ -316,12 +316,12 @@
  * SO_RCVTIMEO processing.
  */
 //#define LWIP_SO_RCVTIMEO                1//clyu
-//#if 0
+
 /**
  * By default, TCP socket/netconn close waits 20 seconds max to send the FIN
  */
 #define LWIP_TCP_CLOSE_TIMEOUT_MS_DEFAULT 20000
-//#if 0
+
 /**
  * LWIP_STATS==1: Enable statistics collection in lwip_stats.
  */
@@ -334,28 +334,28 @@
  */
 #define LWIP_CHECKSUM_CTRL_PER_NETIF    1
 #if 1
-/**
- * PPP_SUPPORT==1: Enable PPP. Check doc/ppp.txt to understand the implementation
- */
-#define PPP_SUPPORT                     0
+    /**
+    * PPP_SUPPORT==1: Enable PPP. Check doc/ppp.txt to understand the implementation
+    */
+    #define PPP_SUPPORT                     0
 
-/**
- * PPP_INPROC_IRQ_SAFE==1 call pppos_input() using tcpip_callback().
- *
- * Please read the "PPPoS input path" chapter in the PPP documentation about this option.
- */
-#define PPP_INPROC_IRQ_SAFE             0
+    /**
+    * PPP_INPROC_IRQ_SAFE==1 call pppos_input() using tcpip_callback().
+    *
+    * Please read the "PPPoS input path" chapter in the PPP documentation about this option.
+    */
+    #define PPP_INPROC_IRQ_SAFE             0
 
-/**
- * PPP_NOTIFY_PHASE==1: Support PPP notify phase support
- *
- * PPP notify phase support allows you to set a callback which is
- * called on change of the internal PPP state machine.
- *
- * This can be used for example to set a LED pattern depending on the
- * current phase of the PPP session.
- */
-//#define PPP_NOTIFY_PHASE                1//clyu ping time 1800ms
+    /**
+    * PPP_NOTIFY_PHASE==1: Support PPP notify phase support
+    *
+    * PPP notify phase support allows you to set a callback which is
+    * called on change of the internal PPP state machine.
+    *
+    * This can be used for example to set a LED pattern depending on the
+    * current phase of the PPP session.
+    */
+    //#define PPP_NOTIFY_PHASE                1//clyu ping time 1800ms
 #endif
 /**
  * MSCHAP_SUPPORT==1: Support MSCHAP.
