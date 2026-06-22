@@ -83,6 +83,7 @@ project:
         - file: ../../../../Library/StdDriver/src/clk.c
         - file: ../../../../Library/StdDriver/src/uart.c
         - file: ../../../../Library/StdDriver/src/crypto.c
+        - file: ../../../../Library/StdDriver/src/fmc.c
     - group: MQTT_App
       files:
         - file: ../src/app/lan.c
