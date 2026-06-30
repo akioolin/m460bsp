@@ -35,6 +35,14 @@ void SYS_Init(void)
     /* Set core clock to 192MHz */
     CLK_SetCoreClock(FREQ_192MHZ);
 
+#if (!I2S_SLAVE)
+    /* Enable PLLFN clock */
+    CLK_EnablePLLFN(CLK_PLLFNCTL1_PLLSRC_HXT, 98304000);
+
+    /* Waiting for PLLFN clock ready */
+    CLK_WaitClockReady(CLK_STATUS_PLLFNSTB_Msk);
+#endif
+
     /* Enable all GPIO clock */
     CLK->AHBCLK0 |= CLK_AHBCLK0_GPACKEN_Msk | CLK_AHBCLK0_GPBCKEN_Msk | CLK_AHBCLK0_GPCCKEN_Msk | CLK_AHBCLK0_GPDCKEN_Msk |
                     CLK_AHBCLK0_GPECKEN_Msk | CLK_AHBCLK0_GPFCKEN_Msk | CLK_AHBCLK0_GPGCKEN_Msk | CLK_AHBCLK0_GPHCKEN_Msk;
@@ -130,11 +138,20 @@ int main(void)
     /* Init I2C2 to access codec */
     I2C2_Init();
 
+#if I2S_SLAVE
     /* Select source from PLL/2 */
     CLK_SetModuleClock(I2S0_MODULE, CLK_CLKSEL3_I2S0SEL_PLL_DIV2, 0);
+#else
+    /* Select source from PLLFN/2 */
+    CLK_SetModuleClock(I2S0_MODULE, CLK_CLKSEL3_I2S0SEL_PLLFN_DIV2, 0);
+#endif
 
     /* Open I2S0 interface and set to slave mode, stereo channel, I2S format */
-    I2S_Open(I2S0, I2S_MODE_SLAVE, 192000, I2S_DATABIT_16, I2S_STEREO, I2S_FORMAT_I2S);
+#if I2S_SLAVE
+    I2S_Open(I2S0, I2S_MODE_SLAVE, 48000, I2S_DATABIT_16, I2S_STEREO, I2S_FORMAT_I2S);
+#else
+    I2S_Open(I2S0, I2S_MODE_MASTER, 192000, I2S_DATABIT_16, I2S_STEREO, I2S_FORMAT_I2S);
+#endif
 
     /* Set PD3 low to enable phone jack on NuMaker board. */
     SYS->GPD_MFP0 &= ~(SYS_GPD_MFP0_PD3MFP_Msk);
@@ -142,7 +159,11 @@ int main(void)
     PD3 = 0;
 
     /* Set MCLK and enable MCLK */
+#if I2S_SLAVE
     I2S_EnableMCLK(I2S0, 12000000);
+#else
+    I2S_EnableMCLK(I2S0, 49152000);
+#endif
 
 #if NAU8822
     NAU8822_Setup();
@@ -174,9 +195,9 @@ int main(void)
 
     while(1)
     {
-        if((i8TxDataCntInBuffer != 0) && ((++i % 0x200000) == 0))
+        if((i8TxDataCntInBuffer != 0) && ((++i % 0x110000) == 0))
         {
-            printf("%d <-> %d (0x%x)\n", i8TxDataCntInBuffer, i8RxDataCntInBuffer, u32AdjSample);
+            printf("%d <-> %d (0x%x) 0x%x\n", i8TxDataCntInBuffer, i8RxDataCntInBuffer, u32AdjSample, FAUDIOCFG);
         }
     }
 }

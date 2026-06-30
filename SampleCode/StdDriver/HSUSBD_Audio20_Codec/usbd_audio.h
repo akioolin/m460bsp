@@ -9,10 +9,10 @@
 #ifndef __USBD_UAC_H__
 #define __USBD_UAC_H__
 
+#define I2S_SLAVE   0
 #define NAU8822     1
 
-/* Use LIN as source, undefine it if MIC is used */
-//#define INPUT_IS_LIN
+#define FAUDIOCFG   M32(0x40000248) // CLK_PLLFNCTL0
 
 /* Define the vendor id and product id */
 #define USBD_VID        0x0416

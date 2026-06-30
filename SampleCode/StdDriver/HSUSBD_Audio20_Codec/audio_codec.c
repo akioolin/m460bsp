@@ -74,6 +74,7 @@ stop:
     EndFlag0 = 1;
 }
 
+#if 0
 static void ATOM_I2C_WriteNAU8822(uint8_t u8addr, uint16_t u16data)
 {
     if(!bIsI2CIdle)
@@ -81,6 +82,7 @@ static void ATOM_I2C_WriteNAU8822(uint8_t u8addr, uint16_t u16data)
 
     I2C_WriteNAU8822(u8addr, u16data);
 }
+#endif
 
 uint32_t u32OldSampleRate = 0;
 extern uint32_t volatile u32PacketSize;
@@ -121,8 +123,13 @@ void NAU8822_ConfigSampleRate(uint32_t u32SampleRate)
             break;
 
         case 48000:
+#if I2S_SLAVE
             I2C_WriteNAU8822(6, 0x14D);    /* Divide by 2, 48K */
             I2C_WriteNAU8822(7, 0x000);    /* 48K for internal filter coefficients */
+#else
+            I2C_WriteNAU8822(6, 0x000);    /* Divide by 2, 48K */
+            I2C_WriteNAU8822(7, 0x000);    /* 48K for internal filter coefficients */
+#endif
             I2C_WriteNAU8822(72, 0x008);
             HSUSBD_SET_MAX_PAYLOAD(EPA, 24);
             u32PacketSize = 6;
@@ -131,8 +138,13 @@ void NAU8822_ConfigSampleRate(uint32_t u32SampleRate)
             break;
 
         case 96000:
+#if I2S_SLAVE
             I2C_WriteNAU8822(6, 0x109);    /* Divide by 1, 96K */
             I2C_WriteNAU8822(72, 0x013);
+#else
+            I2C_WriteNAU8822(6, 0x000);
+            I2C_WriteNAU8822(72, 0x013);
+#endif
             HSUSBD_SET_MAX_PAYLOAD(EPA, 48);
             u32PacketSize = 12;
             u32BuffLen = 768;
@@ -140,8 +152,13 @@ void NAU8822_ConfigSampleRate(uint32_t u32SampleRate)
             break;
 
         case 192000:
+#if I2S_SLAVE
             I2C_WriteNAU8822(6, 0x109);    /* Divide by 1, 192K */
             I2C_WriteNAU8822(72, 0x017);
+#else
+            I2C_WriteNAU8822(6, 0x000);
+            I2C_WriteNAU8822(72, 0x017);
+#endif
             HSUSBD_SET_MAX_PAYLOAD(EPA, 96);
             u32PacketSize = 48;
             u32BuffLen = 768;
@@ -155,22 +172,6 @@ void NAU8822_Setup()
     I2C_WriteNAU8822(0,  0x000);   /* Reset all registers */
     CLK_SysTickDelay(10000);
 
-#ifdef INPUT_IS_LIN   /* Input source is LIN */
-    I2C_WriteNAU8822(1,  0x02F);
-    I2C_WriteNAU8822(2,  0x1B3);   /* Enable L/R Headphone, ADC Mix/Boost, ADC */
-    I2C_WriteNAU8822(3,  0x07F);   /* Enable L/R main mixer, DAC */
-    I2C_WriteNAU8822(4,  0x010);   /* 16-bit word length, I2S format, Stereo */
-    I2C_WriteNAU8822(5,  0x000);   /* Companding control and loop back mode (all disable) */
-    I2C_WriteNAU8822(10, 0x008);   /* DAC soft mute is disabled, DAC oversampling rate is 128x */
-    I2C_WriteNAU8822(14, 0x108);   /* ADC HP filter is disabled, ADC oversampling rate is 128x */
-    I2C_WriteNAU8822(15, 0x1FF);   /* ADC left digital volume control */
-    I2C_WriteNAU8822(16, 0x1FF);   /* ADC right digital volume control */
-    I2C_WriteNAU8822(44, 0x000);   /* LLIN/RLIN is not connected to PGA */
-    I2C_WriteNAU8822(47, 0x060);   /* LLIN connected, and its Gain value */
-    I2C_WriteNAU8822(48, 0x060);   /* RLIN connected, and its Gain value */
-    I2C_WriteNAU8822(50, 0x001);   /* Left DAC connected to LMIX */
-    I2C_WriteNAU8822(51, 0x001);   /* Right DAC connected to RMIX */
-#else   /* Input source is MIC */
     I2C_WriteNAU8822(1,  0x03F);
     I2C_WriteNAU8822(2,  0x1BF);   /* Enable L/R Headphone, ADC Mix/Boost, ADC */
     I2C_WriteNAU8822(3,  0x07F);   /* Enable L/R main mixer, DAC */
@@ -183,11 +184,63 @@ void NAU8822_Setup()
     I2C_WriteNAU8822(44, 0x033);   /* LMICN/LMICP is connected to PGA */
     I2C_WriteNAU8822(50, 0x001);   /* Left DAC connected to LMIX */
     I2C_WriteNAU8822(51, 0x001);   /* Right DAC connected to RMIX */
-#endif
 }
 
 /* Adjust codec PLL */
 void AdjustCodecPll(RESAMPLE_STATE_T r)
+#if (!I2S_SLAVE)
+{
+    uint32_t fcfg_org = 0;
+    static RESAMPLE_STATE_T current = E_RS_NONE;
+    uint32_t tmp;
+    uint32_t u32RegLockLevel = SYS_IsRegLocked();
+
+    if(u32RegLockLevel)
+    {
+        /* Unlock protected registers */
+        SYS_UnlockReg();
+    }
+
+    if(fcfg_org == 0)
+        fcfg_org = FAUDIOCFG;
+
+    if(r == current)
+    {
+        if(u32RegLockLevel)
+        {
+            /* Lock protected registers */
+            SYS_LockReg();
+        }
+        return;
+    }
+    else
+        current = r;
+
+    switch(r)
+    {
+        case E_RS_UP:
+            tmp = (fcfg_org & 0xFFFF) | ((((fcfg_org & 0xFFF0000) >> 16) + 0x40) << 16);
+            //printf("Up 0x%x\n", tmp);
+            break;
+        case E_RS_DOWN:
+            tmp = (fcfg_org & 0xFFFF) | ((((fcfg_org & 0xFFF0000) >> 16) - 0x40) << 16);
+            //printf("Down 0x%x\n", tmp);
+            break;
+        case E_RS_NONE:
+        default:
+            //printf("None 0x%x\n", FAUDIOCFG);
+            tmp = fcfg_org;
+    }
+
+    FAUDIOCFG = tmp;
+
+    if(u32RegLockLevel)
+    {
+        /* Lock protected registers */
+        SYS_LockReg();
+    }
+}
+#else
 {
     static uint16_t tb0[3][3] = {{0x00C, 0x093, 0x0E9}, // 8.192
         {0x00E, 0x1D2, 0x1E3},  // * 1.005 = 8.233
@@ -228,6 +281,7 @@ void AdjustCodecPll(RESAMPLE_STATE_T r)
             ATOM_I2C_WriteNAU8822(37 + i, tb1[s][i]);
     }
 }
+#endif
 
 #else   // NAU88L25
 
@@ -308,7 +362,11 @@ void NAU88L25_ConfigSampleRate(uint32_t u32SampleRate)
     switch(u32SampleRate)
     {
         case 44100:
+#if I2S_SLAVE
             I2C_WriteNAU88L25(0x001D,  0x301A); /* 301A:Master, BCLK_DIV=11.2896M/8=1.4112M, LRC_DIV=1.4112M/32=44.1K */
+#else
+            I2C_WriteNAU88L25(0x001D,  0x3012); /* 3012:Master, BCLK_DIV=11.2896M/8=1.4112M, LRC_DIV=1.4112M/32=44.1K */
+#endif
             I2C_WriteNAU88L25(0x002B,  0x0012);
             I2C_WriteNAU88L25(0x002C,  0x0082);
             u32BuffLen = 441;
@@ -316,7 +374,11 @@ void NAU88L25_ConfigSampleRate(uint32_t u32SampleRate)
             break;
 
         case 48000:
+#if I2S_SLAVE
             I2C_WriteNAU88L25(0x001D,  0x301A); /* 301A:Master, BCLK_DIV=12.288M/8=1.536M, LRC_DIV=1.536M/32=48K */
+#else
+            I2C_WriteNAU88L25(0x001D,  0x3012); /* 3012:Master, BCLK_DIV=12.288M/8=1.536M, LRC_DIV=1.536M/32=48K */
+#endif
             I2C_WriteNAU88L25(0x002B,  0x0012);
             I2C_WriteNAU88L25(0x002C,  0x0082);
             HSUSBD_SET_MAX_PAYLOAD(EPA, 24);
@@ -330,7 +392,11 @@ void NAU88L25_ConfigSampleRate(uint32_t u32SampleRate)
             I2C_WriteNAU88L25(0x0004,  0x1801);
             I2C_WriteNAU88L25(0x0005,  0x3126); /* MCLK = 24.576MHz */
             I2C_WriteNAU88L25(0x0006,  0xF008);
+#if I2S_SLAVE
             I2C_WriteNAU88L25(0x001D,  0x301A); /* 301A:Master, BCLK_DIV=MCLK/8=3.072M, LRC_DIV=3.072M/32=96K */
+#else
+            I2C_WriteNAU88L25(0x001D,  0x3012); /* 3012:Master, BCLK_DIV=MCLK/8=3.072M, LRC_DIV=3.072M/32=96K */
+#endif
             I2C_WriteNAU88L25(0x002B,  0x0001);
             I2C_WriteNAU88L25(0x002C,  0x0080);
             HSUSBD_SET_MAX_PAYLOAD(EPA, 48);
@@ -340,11 +406,19 @@ void NAU88L25_ConfigSampleRate(uint32_t u32SampleRate)
             break;
 
         case 192000:
+#if I2S_SLAVE
             I2C_WriteNAU88L25(0x0003,  0x80F0); /* MCLK = SYSCLK_SRC/2 */
+#else
+            I2C_WriteNAU88L25(0x0003,  0x00F0); /* MCLK = SYSCLK_SRC/1; ADC = DAC = CODEC_SRC/8 */
+#endif
             I2C_WriteNAU88L25(0x0004,  0x1801);
             I2C_WriteNAU88L25(0x0005,  0x3126); /* MCLK = 24.576MHz */
             I2C_WriteNAU88L25(0x0006,  0xF008);
+#if I2S_SLAVE
             I2C_WriteNAU88L25(0x001D,  0x301A); /* 301A:Master, BCLK_DIV=MCLK/8=3.072M, LRC_DIV=3.072M/32=96K */
+#else
+            I2C_WriteNAU88L25(0x001D,  0x3012); /* 3012:Master, BCLK_DIV=MCLK/8=6.144M, LRC_DIV=6.144M/32=192K */
+#endif
             I2C_WriteNAU88L25(0x002B,  0x00E0);
             I2C_WriteNAU88L25(0x002C,  0x0084);
             HSUSBD_SET_MAX_PAYLOAD(EPA, 96);
@@ -369,10 +443,17 @@ void NAU88L25_Reset(void)
 
 void NAU88L25_Setup(void)
 {
-    I2C_WriteNAU88L25(0x0003,  0x8053);
-    I2C_WriteNAU88L25(0x0004,  0x0001);
+#if I2S_SLAVE
+    I2C_WriteNAU88L25(0x0003,  0x80F0); //MCLK = SYSCLK_SRC/1; ADC = DAC = CODEC_SRC/8
+    //I2C_WriteNAU88L25(0x0003,  0x8053); //MCLK = SYSCLK_SRC/4; ADC = DAC = CODEC_SRC/2
+#else
+    I2C_WriteNAU88L25(0x0003,  0x20F0); //MCLK = SYSCLK_SRC/1; ADC = DAC = CODEC_SRC/8
+#endif
+#if I2S_SLAVE
+    I2C_WriteNAU88L25(0x0004,  0x1801);
     I2C_WriteNAU88L25(0x0005,  0x3126);
     I2C_WriteNAU88L25(0x0006,  0x0008);
+#endif
     I2C_WriteNAU88L25(0x0007,  0x0010);
     I2C_WriteNAU88L25(0x0008,  0xC000);
     I2C_WriteNAU88L25(0x0009,  0x6000);
@@ -393,8 +474,13 @@ void NAU88L25_Setup(void)
     I2C_WriteNAU88L25(0x001A,  0x0000);
     I2C_WriteNAU88L25(0x001B,  0x0000);
     I2C_WriteNAU88L25(0x001C,  0x0002);
+#if I2S_SLAVE
     I2C_WriteNAU88L25(0x001D,  0x301A);   /* 301A:Master, BCLK_DIV=12.288M/8=1.536M, LRC_DIV=1.536M/32=48K */
     I2C_WriteNAU88L25(0x001E,  0x0000);
+#else
+    I2C_WriteNAU88L25(0x001D,  0x3012);   /* 3012:Master, BCLK_DIV=MCLK/8=6.144M, LRC_DIV=6.144M/32=192K */
+//    I2C_WriteNAU88L25(0x001E,  0x2000);
+#endif
     I2C_WriteNAU88L25(0x001F,  0x0000);
     I2C_WriteNAU88L25(0x0020,  0x0000);
     I2C_WriteNAU88L25(0x0021,  0x0000);

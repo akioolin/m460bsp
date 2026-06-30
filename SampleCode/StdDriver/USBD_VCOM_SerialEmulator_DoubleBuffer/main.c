@@ -405,7 +405,7 @@ int main(void)
 
                 /* Re-enable crystal-less */
                 SYS->HIRCTCTL = 0x01;
-                SYS->HIRCTCTL |= SYS_HIRCTCTL_REFCKSEL_Msk | SYS_HIRCTCTL_BOUNDEN_Msk | (8 << SYS_HIRCTCTL_BOUNDARY_Pos);
+                SYS->HIRCTCTL |= SYS_HIRCTCTL_REFCKSEL_Msk | SYS_HIRCTCTL_BOUNDEN_Msk | (16 << SYS_HIRCTCTL_BOUNDARY_Pos);
             }
         }
 
