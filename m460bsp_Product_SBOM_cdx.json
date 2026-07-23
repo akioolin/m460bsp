@@ -1,18 +1,18 @@
 {
-  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.7",
-  "serialNumber": "urn:uuid:40206b27-9546-4db5-abba-e29a9fa84c76",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:32317611-87be-43f8-854f-63d09670712e",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-15T11:26:18+08:00",
+    "timestamp": "2026-07-23T14:01:20+08:00",
     "tools": {
       "components": [
         {
           "type": "application",
           "author": "anchore",
           "name": "syft",
-          "version": "1.46.0"
+          "version": "1.45.1"
         }
       ]
     },
@@ -20,7 +20,7 @@
       "bom-ref": "04ed2dbaee1fb902",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -105,7 +105,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-cryptoaccelerator",
       "name": "m460 CryptoAccelerator",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -150,7 +150,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-device",
       "name": "m460 Device",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -195,7 +195,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-numaker",
       "name": "m460 NuMaker",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -240,7 +240,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-smartcardlib",
       "name": "m460 SmartcardLib",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -285,27 +285,27 @@
         },
         {
           "name": "bsp:static-lib:0:path",
-          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
-        },
-        {
-          "name": "bsp:static-lib:0:sha256",
-          "value": "12d45784fafe253d796bd2da67b5fabc287d187be5dff0c0bd18e958e4756faf"
-        },
-        {
-          "name": "bsp:static-lib:1:path",
-          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
-        },
-        {
-          "name": "bsp:static-lib:1:sha256",
-          "value": "6c67caa3813a1db9d3b676c1edfa33c527218e6b4b527ea9ce8ebf378e738b04"
-        },
-        {
-          "name": "bsp:static-lib:2:path",
           "value": "Library/SmartcardLib/libsmartcard.a"
         },
         {
-          "name": "bsp:static-lib:2:sha256",
+          "name": "bsp:static-lib:0:sha256",
           "value": "4cfe22412d6a3935cd2988c5f8326bfeaeee4d7a10315b049be3223b1ac6759b"
+        },
+        {
+          "name": "bsp:static-lib:1:path",
+          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
+        },
+        {
+          "name": "bsp:static-lib:1:sha256",
+          "value": "12d45784fafe253d796bd2da67b5fabc287d187be5dff0c0bd18e958e4756faf"
+        },
+        {
+          "name": "bsp:static-lib:2:path",
+          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
+        },
+        {
+          "name": "bsp:static-lib:2:sha256",
+          "value": "6c67caa3813a1db9d3b676c1edfa33c527218e6b4b527ea9ce8ebf378e738b04"
         }
       ]
     },
@@ -313,7 +313,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-stddriver",
       "name": "m460 StdDriver",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -358,7 +358,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-usbhostlib",
       "name": "m460 UsbHostLib",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {

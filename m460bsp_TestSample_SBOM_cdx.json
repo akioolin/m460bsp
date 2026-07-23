@@ -1,18 +1,18 @@
 {
-  "$schema": "http://cyclonedx.org/schema/bom-1.7.schema.json",
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.7",
-  "serialNumber": "urn:uuid:6b029751-1f69-4634-8bcc-cec82e9d71bf",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:f89d2d60-dcd6-4cb2-9e93-e61a68c32ce2",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-15T11:26:20+08:00",
+    "timestamp": "2026-07-23T14:01:27+08:00",
     "tools": {
       "components": [
         {
           "type": "application",
           "author": "anchore",
           "name": "syft",
-          "version": "1.46.0"
+          "version": "1.45.1"
         }
       ]
     },
@@ -20,7 +20,7 @@
       "bom-ref": "85fd158bf2db4a01",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -74,7 +74,7 @@
   },
   "components": [
     {
-      "bom-ref": "dbbc67571d8da5aa",
+      "bom-ref": "067ab594cb805ead",
       "type": "application",
       "name": "HID Transfer Test Tool",
       "version": "1.1.0.0",
@@ -152,7 +152,7 @@
       ]
     },
     {
-      "bom-ref": "085a17eaa7fe8c16",
+      "bom-ref": "4469a6b94ddb29ec",
       "type": "library",
       "name": "Lua - The Programming Language",
       "version": "5.1.4",
@@ -250,7 +250,7 @@
       ]
     },
     {
-      "bom-ref": "10c8cf1bd12ee4f8",
+      "bom-ref": "3fd87dffff71a8c3",
       "type": "application",
       "name": "NuvPos58 Driver",
       "version": "1.0",
@@ -328,7 +328,7 @@
       ]
     },
     {
-      "bom-ref": "470549638e85b93b",
+      "bom-ref": "23951a4ce02cbc86",
       "type": "application",
       "name": "NuvPos58 Driver",
       "version": "1.0",
@@ -406,7 +406,7 @@
       ]
     },
     {
-      "bom-ref": "68c37d2906de8bf3",
+      "bom-ref": "5569440e5357172b",
       "type": "application",
       "name": "WDF Coinstaller",
       "version": "1.11.9200.16384",
@@ -484,7 +484,7 @@
       ]
     },
     {
-      "bom-ref": "7b04c424b503306a",
+      "bom-ref": "d8995f12c25081c1",
       "type": "application",
       "name": "WDF Coinstaller",
       "version": "1.11.9200.16384",
@@ -562,7 +562,7 @@
       ]
     },
     {
-      "bom-ref": "390d07d44cdc7222",
+      "bom-ref": "fe4ed4607d2096b2",
       "type": "application",
       "name": "WDF Coinstaller",
       "version": "1.11.9200.16384",
@@ -640,7 +640,7 @@
       ]
     },
     {
-      "bom-ref": "acae543762599a9b",
+      "bom-ref": "60be5e95c3604ff0",
       "type": "application",
       "name": "WDF Coinstaller",
       "version": "1.11.9200.16384",
@@ -718,7 +718,7 @@
       ]
     },
     {
-      "bom-ref": "bf71cac99c5dbe91",
+      "bom-ref": "4bf0dac8cacd6698",
       "type": "application",
       "name": "Windows Driver Foundation - User-mode Platform Device Update Co-Installer",
       "version": "6.1.7600.16385",
@@ -848,7 +848,7 @@
       ]
     },
     {
-      "bom-ref": "26cfaca37be113dc",
+      "bom-ref": "29581802f1e97d34",
       "type": "application",
       "name": "Windows Driver Foundation - User-mode Platform Device Update Co-Installer",
       "version": "6.1.7600.16385",
@@ -978,11 +978,10 @@
       ]
     },
     {
-      "bom-ref": "7714612e35fdeff1",
+      "bom-ref": "17aa5837af702890",
       "type": "application",
-      "name": "XOMAddr",
+      "name": "/SampleCode/XOM/XOMLib/XOMAddr",
       "version": "1.0",
-      "cpe": "cpe:2.3:a:XOMAddr:XOMAddr:*:*:*:*:*:*:*:*",
       "properties": [
         {
           "name": "syft:package:foundBy",
@@ -1056,7 +1055,7 @@
       ]
     },
     {
-      "bom-ref": "b8389e2abd44a30e",
+      "bom-ref": "a64f0d54e564b312",
       "type": "library",
       "name": "libusb-win32 - DLL",
       "version": "1.2.6.0",
@@ -1170,7 +1169,7 @@
       ]
     },
     {
-      "bom-ref": "86da19749c6dc703",
+      "bom-ref": "b775bc2a35788071",
       "type": "library",
       "name": "libusb-win32 - DLL",
       "version": "1.2.6.0",
@@ -1284,7 +1283,7 @@
       ]
     },
     {
-      "bom-ref": "00661d7acc70d984",
+      "bom-ref": "f67901f38aab2272",
       "type": "library",
       "name": "libusb-win32 - DLL",
       "version": "1.2.6.0",
@@ -1398,7 +1397,7 @@
       ]
     },
     {
-      "bom-ref": "77312b311f469223",
+      "bom-ref": "84f0af57ceae234d",
       "type": "library",
       "name": "libusb-win32 - DLL",
       "version": "1.2.6.0",
@@ -1512,7 +1511,7 @@
       ]
     },
     {
-      "bom-ref": "c43e2cae2400373c",
+      "bom-ref": "dd54509e3b51ed27",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -1642,7 +1641,7 @@
       ]
     },
     {
-      "bom-ref": "ff1204fa159e3d67",
+      "bom-ref": "74cae8393dbbcd4b",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -1772,7 +1771,7 @@
       ]
     },
     {
-      "bom-ref": "b816c3bf0b89a4c7",
+      "bom-ref": "92903767fdf8f934",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -1902,7 +1901,7 @@
       ]
     },
     {
-      "bom-ref": "670818ec9a130c70",
+      "bom-ref": "47ae4d2b9f1072b0",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -2032,7 +2031,7 @@
       ]
     },
     {
-      "bom-ref": "8618fa79f8cc5fc0",
+      "bom-ref": "9fa84ed7c55012d1",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -2162,7 +2161,7 @@
       ]
     },
     {
-      "bom-ref": "aefe99ca59736a36",
+      "bom-ref": "40b562efb0536f91",
       "type": "library",
       "name": "libusb-win32 - Install-Filter",
       "version": "1.2.6.0",
@@ -2292,7 +2291,7 @@
       ]
     },
     {
-      "bom-ref": "dfd339558d9de869",
+      "bom-ref": "5d9b5d81b237b8ce",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2368,7 +2367,7 @@
       ]
     },
     {
-      "bom-ref": "2ece3c745f6fb48d",
+      "bom-ref": "54c0b73d615c0171",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2444,7 +2443,7 @@
       ]
     },
     {
-      "bom-ref": "fe96b57fa413e90e",
+      "bom-ref": "d842a3083b0024ce",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2520,7 +2519,7 @@
       ]
     },
     {
-      "bom-ref": "1a35bd5626f7788f",
+      "bom-ref": "045e44a5f687609e",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2596,7 +2595,7 @@
       ]
     },
     {
-      "bom-ref": "1d7f325535359b15",
+      "bom-ref": "f6046a97c6283091",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2672,7 +2671,7 @@
       ]
     },
     {
-      "bom-ref": "25ae7d6fab29d59c",
+      "bom-ref": "8a22f13b9ec4c257",
       "type": "library",
       "name": "libusbK.dll",
       "version": "3.0.7.0",
@@ -2751,7 +2750,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:samplecode",
       "name": "m460 SampleCode",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -2796,7 +2795,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:thirdparty",
       "name": "m460 ThirdParty",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -2841,7 +2840,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:utilities",
       "name": "m460 Utilities",
-      "version": "v3.00.005-11-g62d37170",
+      "version": "v3.00.005-12-g43204ebd-dirty",
       "licenses": [
         {
           "license": {
@@ -3398,93 +3397,6 @@
         {
           "name": "bsp:license-evidence",
           "value": "ThirdParty/shine/COPYING; ThirdParty/shine/README.md; ThirdParty/shine/README.old"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "bom-ref": "pkg:generic/smartcardlib@V3.00?source=vendored&path=Library/SmartcardLib",
-      "name": "SmartcardLib",
-      "version": "V3.00",
-      "scope": "required",
-      "author": "Nuvoton Technology Corporation",
-      "purl": "pkg:generic/smartcardlib@V3.00",
-      "description": "SmartcardLib is a first-party pre-built smartcard protocol library for supported NuMicro MCUs. The library provides ISO-7816 smartcard activation, reset, card information, and T=0/T=1 transmission APIs through the SCLIB interface.",
-      "licenses": [
-        {
-          "license": {
-            "name": "Nuvoton Proprietary"
-          }
-        }
-      ],
-      "properties": [
-        {
-          "name": "bsp:file-path",
-          "value": "Library/SmartcardLib"
-        },
-        {
-          "name": "bsp:binary-file",
-          "value": "Library/SmartcardLib/libsmartcard.a"
-        },
-        {
-          "name": "bsp:binary-file",
-          "value": "Library/SmartcardLib/SmartCardLib_Keil.lib"
-        },
-        {
-          "name": "bsp:binary-file",
-          "value": "Library/SmartcardLib/SmartCardLib_IAR.a"
-        },
-        {
-          "name": "bsp:header-file",
-          "value": "Library/SmartcardLib/Include/sclib.h"
-        },
-        {
-          "name": "integration",
-          "value": "vendored_binary"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-source",
-          "value": "Nuvoton Technology Corporation"
-        },
-        {
-          "name": "bsp:license-file",
-          "value": "Library/SmartcardLib/LICENSE.md"
-        },
-        {
-          "name": "bsp:evidence-file",
-          "value": "Document/SBOM/components/sca_smartcardlib.json"
-        },
-        {
-          "name": "bsp:evidence-path",
-          "value": "Library/SmartcardLib"
-        },
-        {
-          "name": "bsp:version-evidence",
-          "value": "Library/SmartcardLib/Include/sclib.h (@version V3.00)"
-        },
-        {
-          "name": "bsp:sha256:Library/SmartcardLib/libsmartcard.a",
-          "value": "c426c4b9402edb3a8147bcb8ce9f7dbc48a22707eefac4be8d3ce734ec9232e3"
-        },
-        {
-          "name": "bsp:sha256:Library/SmartcardLib/SmartCardLib_Keil.lib",
-          "value": "4c0f8f28c5076c96f71f065c5fdc52dbde86bd63712a3276c817de32f3d41e82"
-        },
-        {
-          "name": "bsp:sha256:Library/SmartcardLib/SmartCardLib_IAR.a",
-          "value": "aa1bcd76af1d1207b8aa1492623392f3ee2127895207a039254e6263761ba34d"
-        },
-        {
-          "name": "bsp:sha256:Library/SmartcardLib/Include/sclib.h",
-          "value": "72ad31e5366dd4348dc9539e8d28b80c6c8ad03c60869b75044390c483c10c77"
-        },
-        {
-          "name": "bsp:sha256:Library/SmartcardLib/LICENSE.md",
-          "value": "ee61ebfcdb1c0f17b01f83d7e928711840b62cd58172276cb1a873ea2a13664d"
         }
       ]
     },
