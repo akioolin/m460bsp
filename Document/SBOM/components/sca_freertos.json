@@ -8,6 +8,7 @@
       "scope": "required",
       "author": "Amazon.com, Inc. (FreeRTOS project)",
       "purl": "pkg:generic/freertos-kernel@10.0.0",
+      "cpe": "cpe:2.3:o:amazon:freertos:10.0.0:*:*:*:*:*:*:*",
       "description": "FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, GCC/IAR/RVDS portable layers, memory managers, license text, and demo/common example files.",
       "licenses": [
         {

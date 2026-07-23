@@ -8,6 +8,7 @@
       "scope": "required",
       "author": "Independent JPEG Group",
       "purl": "pkg:generic/libjpeg@9b",
+      "cpe": "cpe:2.3:a:ijg:libjpeg:9b:*:*:*:*:*:*:*",
       "description": "Independent JPEG Group libjpeg vendored in ThirdParty/libjpeg, including JPEG compression/decompression library sources, command-line tools, build scripts, documentation, and test images.",
       "licenses": [
         {
