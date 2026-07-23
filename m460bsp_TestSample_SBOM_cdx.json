@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:f89d2d60-dcd6-4cb2-9e93-e61a68c32ce2",
+  "serialNumber": "urn:uuid:78d06b98-4b75-43d1-aa24-a70875ae5461",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-23T14:01:27+08:00",
+    "timestamp": "2026-07-23T15:57:49+08:00",
     "tools": {
       "components": [
         {
@@ -17,10 +17,10 @@
       ]
     },
     "component": {
-      "bom-ref": "85fd158bf2db4a01",
+      "bom-ref": "62f25f45395ccc78",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -2750,7 +2750,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:samplecode",
       "name": "m460 SampleCode",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -2795,7 +2795,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:thirdparty",
       "name": "m460 ThirdParty",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -2840,7 +2840,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:utilities",
       "name": "m460 Utilities",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -2889,6 +2889,7 @@
       "scope": "required",
       "author": "ChaN",
       "purl": "pkg:generic/fatfs@R0.12",
+      "cpe": "cpe:2.3:a:elm-chan:fatfs:r0.12:*:*:*:*:*:*:*",
       "description": "FatFs - Generic FAT file system module for embedded systems (ANSI C/C89), integrated as vendored source code.",
       "licenses": [
         {
@@ -2932,6 +2933,7 @@
       "scope": "required",
       "author": "Amazon.com, Inc. (FreeRTOS project)",
       "purl": "pkg:generic/freertos-kernel@10.0.0",
+      "cpe": "cpe:2.3:o:amazon:freertos:10.0.0:*:*:*:*:*:*:*",
       "description": "FreeRTOS Kernel vendored in ThirdParty/FreeRTOS, including kernel source, public headers, GCC/IAR/RVDS portable layers, memory managers, license text, and demo/common example files.",
       "licenses": [
         {
@@ -2991,6 +2993,7 @@
       "scope": "required",
       "author": "Independent JPEG Group",
       "purl": "pkg:generic/libjpeg@9b",
+      "cpe": "cpe:2.3:a:ijg:libjpeg:9b:*:*:*:*:*:*:*",
       "description": "Independent JPEG Group libjpeg vendored in ThirdParty/libjpeg, including JPEG compression/decompression library sources, command-line tools, build scripts, documentation, and test images.",
       "licenses": [
         {
@@ -3046,6 +3049,7 @@
       "scope": "required",
       "author": "Underbit Technologies, Inc.",
       "purl": "pkg:generic/libmad@0.15.1-beta",
+      "cpe": "cpe:2.3:a:underbit:libmad:0.15.1b:*:*:*:*:*:*:*",
       "description": "libmad MPEG audio decoder library vendored in ThirdParty/LibMAD, including decoder source files, public/internal headers, fixed-point tables, and local CMake build metadata.",
       "licenses": [
         {
@@ -3105,6 +3109,7 @@
       "scope": "required",
       "author": "lwIP project / Swedish Institute of Computer Science",
       "purl": "pkg:generic/lwip@2.1.2",
+      "cpe": "cpe:2.3:a:lwip_project:lwip:2.1.2:*:*:*:*:*:*:*",
       "description": "lwIP TCP/IP stack vendored in ThirdParty/lwIP, including stack source, public headers, apps, network interface code, documentation, tests, and license text.",
       "licenses": [
         {
@@ -3168,6 +3173,7 @@
       "scope": "required",
       "author": "Mbed TLS Contributors",
       "purl": "pkg:generic/mbedtls@3.1.0",
+      "cpe": "cpe:2.3:a:arm:mbed_tls:3.1.0:*:*:*:*:*:*:*",
       "description": "Mbed TLS cryptographic and TLS library vendored in ThirdParty/mbedtls-3.1.0, including core library sources, public headers, configurations, documentation, programs, tests, scripts, build metadata, and bundled third-party code.",
       "licenses": [
         {
@@ -3231,6 +3237,7 @@
       "scope": "required",
       "author": "Ian Craggs / Eclipse Paho project",
       "purl": "pkg:generic/paho.mqtt.embedded-c@1.0.0",
+      "cpe": "cpe:2.3:a:eclipse:paho_mqtt_c\\/c\\+\\+_client:1.0.0:*:*:*:*:*:*:*",
       "description": "Eclipse Paho MQTT C/C++ client library for embedded platforms vendored in ThirdParty/paho.mqtt.embedded-c, including MQTTPacket, MQTTClient, MQTTClient-C, samples, tests, documentation, build metadata, and license texts.",
       "licenses": [
         {
@@ -3594,7 +3601,7 @@
   ],
   "dependencies": [
     {
-      "ref": "85fd158bf2db4a01",
+      "ref": "62f25f45395ccc78",
       "dependsOn": [
         "m460bsp:test-sample-component:samplecode",
         "m460bsp:test-sample-component:thirdparty",

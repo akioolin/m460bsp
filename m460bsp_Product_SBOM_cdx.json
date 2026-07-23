@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:32317611-87be-43f8-854f-63d09670712e",
+  "serialNumber": "urn:uuid:e51dda5b-dcdd-49e4-bb24-c6a90795a9c9",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-23T14:01:20+08:00",
+    "timestamp": "2026-07-23T15:53:27+08:00",
     "tools": {
       "components": [
         {
@@ -17,10 +17,10 @@
       ]
     },
     "component": {
-      "bom-ref": "04ed2dbaee1fb902",
+      "bom-ref": "c616694dc9feeee3",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -105,7 +105,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-cryptoaccelerator",
       "name": "m460 CryptoAccelerator",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -150,7 +150,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-device",
       "name": "m460 Device",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -195,7 +195,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-numaker",
       "name": "m460 NuMaker",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -240,7 +240,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-smartcardlib",
       "name": "m460 SmartcardLib",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -313,7 +313,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-stddriver",
       "name": "m460 StdDriver",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -358,7 +358,7 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-usbhostlib",
       "name": "m460 UsbHostLib",
-      "version": "v3.00.005-12-g43204ebd-dirty",
+      "version": "v3.00.005-15-ge5cf93b4",
       "licenses": [
         {
           "license": {
@@ -457,7 +457,7 @@
   ],
   "dependencies": [
     {
-      "ref": "04ed2dbaee1fb902",
+      "ref": "c616694dc9feeee3",
       "dependsOn": [
         "m460bsp:product-component:library-cryptoaccelerator",
         "m460bsp:product-component:library-device",
