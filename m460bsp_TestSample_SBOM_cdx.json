@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:78d06b98-4b75-43d1-aa24-a70875ae5461",
+  "serialNumber": "urn:uuid:5e9189d1-d6ed-4246-b604-5462075a6a50",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-23T15:57:49+08:00",
+    "timestamp": "2026-07-24T18:19:13+08:00",
     "tools": {
       "components": [
         {
@@ -17,10 +17,10 @@
       ]
     },
     "component": {
-      "bom-ref": "62f25f45395ccc78",
+      "bom-ref": "e1f8148bf663a81a",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.005-15-ge5cf93b4",
+      "version": "v3.00.005-16-gb32d6378",
       "licenses": [
         {
           "license": {
@@ -2750,7 +2750,7 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:samplecode",
       "name": "m460 SampleCode",
-      "version": "v3.00.005-15-ge5cf93b4",
+      "version": "v3.00.005-16-gb32d6378",
       "licenses": [
         {
           "license": {
@@ -2768,96 +2768,6 @@
         {
           "name": "bsp:path",
           "value": "SampleCode/"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-granularity",
-          "value": "directory"
-        },
-        {
-          "name": "bsp:scope-policy-file",
-          "value": "test-sample-scope.yaml"
-        },
-        {
-          "name": "bsp:runtime-scope",
-          "value": "false"
-        },
-        {
-          "name": "bsp:included-in-product-firmware",
-          "value": "false"
-        }
-      ]
-    },
-    {
-      "type": "application",
-      "bom-ref": "m460bsp:test-sample-component:thirdparty",
-      "name": "m460 ThirdParty",
-      "version": "v3.00.005-15-ge5cf93b4",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
-      "scope": "required",
-      "description": "Directory-level first-party BSP test-sample component included from test-sample scope path ThirdParty/",
-      "properties": [
-        {
-          "name": "bsp:sbom-category",
-          "value": "test-sample"
-        },
-        {
-          "name": "bsp:path",
-          "value": "ThirdParty/"
-        },
-        {
-          "name": "bsp:component-origin",
-          "value": "first-party"
-        },
-        {
-          "name": "bsp:component-granularity",
-          "value": "directory"
-        },
-        {
-          "name": "bsp:scope-policy-file",
-          "value": "test-sample-scope.yaml"
-        },
-        {
-          "name": "bsp:runtime-scope",
-          "value": "false"
-        },
-        {
-          "name": "bsp:included-in-product-firmware",
-          "value": "false"
-        }
-      ]
-    },
-    {
-      "type": "application",
-      "bom-ref": "m460bsp:test-sample-component:utilities",
-      "name": "m460 Utilities",
-      "version": "v3.00.005-15-ge5cf93b4",
-      "licenses": [
-        {
-          "license": {
-            "id": "Apache-2.0"
-          }
-        }
-      ],
-      "scope": "required",
-      "description": "Directory-level first-party BSP test-sample component included from test-sample scope path Utilities/",
-      "properties": [
-        {
-          "name": "bsp:sbom-category",
-          "value": "test-sample"
-        },
-        {
-          "name": "bsp:path",
-          "value": "Utilities/"
         },
         {
           "name": "bsp:component-origin",
@@ -3601,11 +3511,9 @@
   ],
   "dependencies": [
     {
-      "ref": "62f25f45395ccc78",
+      "ref": "e1f8148bf663a81a",
       "dependsOn": [
-        "m460bsp:test-sample-component:samplecode",
-        "m460bsp:test-sample-component:thirdparty",
-        "m460bsp:test-sample-component:utilities"
+        "m460bsp:test-sample-component:samplecode"
       ]
     }
   ]

@@ -1,13 +1,13 @@
 {
   "manifestFormat": "MCU-BSP-SBOM-Manifest",
   "manifestVersion": "1.0",
-  "serialNumber": "urn:uuid:8ac0d16d-f5c0-483c-a8be-3429b804ed6d",
-  "createdAt": "2026-07-23T07:57:57.640217Z",
+  "serialNumber": "urn:uuid:7e6eeab5-3818-4b0a-a5ab-27caa415cdbf",
+  "createdAt": "2026-07-24T10:19:18.540793Z",
   "bsp": {
     "name": "m460bsp",
-    "version": "v3.00.005-15-ge5cf93b4",
+    "version": "v3.00.005-16-gb32d6378",
     "releaseIdentifierSource": "SBOM file name",
-    "gitDescribe": "v3.00.005-15-ge5cf93b4"
+    "gitDescribe": "v3.00.005-16-gb32d6378"
   },
   "sbomPackage": {
     "name": "MCU BSP SBOM Package",
@@ -24,14 +24,14 @@
       "sbomType": "Product SBOM",
       "bomFormat": "CycloneDX",
       "specVersion": "1.6",
-      "serialNumber": "urn:uuid:e51dda5b-dcdd-49e4-bb24-c6a90795a9c9",
+      "serialNumber": "urn:uuid:d4d1dc65-7102-43c7-b7c2-4da3f785e657",
       "sbomVersion": 1,
-      "generatedTimestamp": "2026-07-23T15:53:27+08:00",
+      "generatedTimestamp": "2026-07-24T18:19:05+08:00",
       "metadataComponent": {
-        "bomRef": "c616694dc9feeee3",
+        "bomRef": "242d9232a926e853",
         "type": "library",
         "name": "MCU Driver",
-        "version": "v3.00.005-15-ge5cf93b4",
+        "version": "v3.00.005-16-gb32d6378",
         "properties": [
           {
             "name": "bsp:sbom-category",
@@ -116,7 +116,7 @@
       },
       "hash": {
         "algorithm": "SHA-256",
-        "value": "48d521031a3bc12d1089cc12cb3225976b65895411501f52cb9d916c77fbb62d"
+        "value": "186d3d94a42548aeb8e3162ad702329c4bdcd2e2869b72f9346c8dff69a149a5"
       }
     },
     {
@@ -124,14 +124,14 @@
       "sbomType": "Test Sample SBOM",
       "bomFormat": "CycloneDX",
       "specVersion": "1.6",
-      "serialNumber": "urn:uuid:78d06b98-4b75-43d1-aa24-a70875ae5461",
+      "serialNumber": "urn:uuid:5e9189d1-d6ed-4246-b604-5462075a6a50",
       "sbomVersion": 1,
-      "generatedTimestamp": "2026-07-23T15:57:49+08:00",
+      "generatedTimestamp": "2026-07-24T18:19:13+08:00",
       "metadataComponent": {
-        "bomRef": "62f25f45395ccc78",
+        "bomRef": "e1f8148bf663a81a",
         "type": "application",
         "name": "MCU Test Sample",
-        "version": "v3.00.005-15-ge5cf93b4",
+        "version": "v3.00.005-16-gb32d6378",
         "properties": [
           {
             "name": "bsp:sbom-category",
@@ -178,9 +178,9 @@
       "scope": "Components used only for examples, demonstrations, validation, host-side utilities, or testing; not included in product runtime unless explicitly integrated by the user.",
       "isProductRuntimeScope": false,
       "componentSummary": {
-        "componentCount": 42,
+        "componentCount": 40,
         "componentCountByType": {
-          "application": 13,
+          "application": 11,
           "device-driver": 3,
           "library": 26
         },
@@ -190,16 +190,14 @@
           "NuvPos58 Driver",
           "WDF Coinstaller",
           "Windows Driver Foundation - User-mode Platform Device Update Co-Installer",
-          "m460 SampleCode",
-          "m460 ThirdParty",
-          "m460 Utilities"
+          "m460 SampleCode"
         ],
         "fileComponentCount": 0,
         "fileComponentWithHashCount": 0
       },
       "hash": {
         "algorithm": "SHA-256",
-        "value": "b05aa49444911f054d86cb10ab0b2f0b4654700105ed9b445502a17f9129782d"
+        "value": "d76dce32c7bbf5465ef2c8158cc276d474f45284d0f3170b179ed4c3bc905613"
       },
       "relationshipToProductSbom": {
         "usesProductComponents": true,
