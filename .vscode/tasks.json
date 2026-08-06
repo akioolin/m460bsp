@@ -48,7 +48,7 @@
         {
             "label": "CMSIS Load+Run",
             "dependsOn": [
-                "CMSIS Load"
+                "Probe-rs Load"
             ],
             "dependsOrder": "sequence",
             "problemMatcher": []
