@@ -965,9 +965,9 @@ void TMR0_IRQHandler(void)
 #if NAU8822
     if(u8AudioPlaying)
     {
-        if((i8TxDataCntInBuffer >= (PDMA_TXBUFFER_CNT / 2)) && (i8TxDataCntInBuffer <= (PDMA_TXBUFFER_CNT / 2 + 1)))
+        if((i8TxDataCntInBuffer >= (PDMA_TXBUFFER_CNT / 2)) && (i8TxDataCntInBuffer <= (PDMA_TXBUFFER_CNT / 2 + 2)))
             AdjustCodecPll(E_RS_NONE);
-        else if(i8TxDataCntInBuffer >= (PDMA_TXBUFFER_CNT - 2))
+        else if(i8TxDataCntInBuffer >= (PDMA_TXBUFFER_CNT - 1))
             AdjustCodecPll(E_RS_UP);
         else
             AdjustCodecPll(E_RS_DOWN);
