@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:5e9189d1-d6ed-4246-b604-5462075a6a50",
+  "serialNumber": "urn:uuid:42a572ee-8671-4c84-bc23-84c39a256b68",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-24T18:19:13+08:00",
+    "timestamp": "2026-08-21T18:44:21+08:00",
     "tools": {
       "components": [
         {
@@ -20,7 +20,14 @@
       "bom-ref": "e1f8148bf663a81a",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/mcu-test-sample@v3.00.005-21-gf3049de9-dirty",
       "licenses": [
         {
           "license": {
@@ -70,7 +77,18 @@
           "value": "Library/"
         }
       ]
-    }
+    },
+    "supplier": {
+      "name": "Nuvoton Technology Corp.",
+      "url": [
+        "https://www.nuvoton.com"
+      ]
+    },
+    "authors": [
+      {
+        "name": "Nuvoton Technology Corp."
+      }
+    ]
   },
   "components": [
     {
@@ -149,7 +167,8 @@
             "id": "Apache-2.0"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/hid-transfer-test-tool@1.1.0.0"
     },
     {
       "bom-ref": "4469a6b94ddb29ec",
@@ -247,7 +266,8 @@
             "id": "MIT"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/lua---the-programming-language@5.1.4"
     },
     {
       "bom-ref": "3fd87dffff71a8c3",
@@ -322,10 +342,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Nuvoton Software License Agreement"
+            "id": "LicenseRef-Nuvoton-Proprietary"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/nuvpos58-driver@1.0"
     },
     {
       "bom-ref": "23951a4ce02cbc86",
@@ -400,10 +421,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Nuvoton Software License Agreement"
+            "id": "LicenseRef-Nuvoton-Proprietary"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/nuvpos58-driver@1.0"
     },
     {
       "bom-ref": "5569440e5357172b",
@@ -478,10 +500,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "d8995f12c25081c1",
@@ -556,10 +579,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "fe4ed4607d2096b2",
@@ -634,10 +658,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "60be5e95c3604ff0",
@@ -712,10 +737,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/wdf-coinstaller@1.11.9200.16384"
     },
     {
       "bom-ref": "4bf0dac8cacd6698",
@@ -842,10 +868,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/windows-driver-foundation---user-mode-platform-device-update-co-installer@6.1.7600.16385"
     },
     {
       "bom-ref": "29581802f1e97d34",
@@ -972,10 +999,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Microsoft Software License Terms"
+            "id": "LicenseRef-Microsoft-Software-License-Terms"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/windows-driver-foundation---user-mode-platform-device-update-co-installer@6.1.7600.16385"
     },
     {
       "bom-ref": "17aa5837af702890",
@@ -1049,10 +1077,11 @@
       "licenses": [
         {
           "license": {
-            "name": "Nuvoton Software License Agreement"
+            "id": "LicenseRef-Nuvoton-Proprietary"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/samplecode-xom-xomlib-xomaddr@1.0"
     },
     {
       "bom-ref": "a64f0d54e564b312",
@@ -1166,7 +1195,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "b775bc2a35788071",
@@ -1280,7 +1310,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "f67901f38aab2272",
@@ -1394,7 +1425,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "84f0af57ceae234d",
@@ -1508,7 +1540,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---dll@1.2.6.0"
     },
     {
       "bom-ref": "dd54509e3b51ed27",
@@ -1638,7 +1671,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "74cae8393dbbcd4b",
@@ -1768,7 +1802,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "92903767fdf8f934",
@@ -1898,7 +1933,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "47ae4d2b9f1072b0",
@@ -2028,7 +2064,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "9fa84ed7c55012d1",
@@ -2158,7 +2195,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "40b562efb0536f91",
@@ -2288,7 +2326,8 @@
             "id": "LGPL-2.1-or-later"
           }
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32---install-filter@1.2.6.0"
     },
     {
       "bom-ref": "5d9b5d81b237b8ce",
@@ -2364,7 +2403,8 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "54c0b73d615c0171",
@@ -2440,7 +2480,8 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "d842a3083b0024ce",
@@ -2516,7 +2557,8 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "045e44a5f687609e",
@@ -2592,7 +2634,8 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "f6046a97c6283091",
@@ -2668,7 +2711,8 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "bom-ref": "8a22f13b9ec4c257",
@@ -2744,13 +2788,27 @@
         {
           "expression": "BSD-3-Clause OR GPL-3.0-only"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk.dll@3.0.7.0"
     },
     {
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:samplecode",
       "name": "m460 SampleCode",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/samplecode@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f66f8c1f4f30223e2a23df5a733f7f9a3e0d573e2addc67cba6177cef003a688"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -2804,7 +2862,7 @@
       "licenses": [
         {
           "license": {
-            "name": "FatFs license (BSD-like, as declared by ChaN in source header)"
+            "id": "LicenseRef-FatFs-license--BSD-like--as-declared-by-ChaN-in-source-header-"
           }
         }
       ],
@@ -2832,6 +2890,12 @@
         {
           "name": "bsp:evidence-file",
           "value": "Document/SBOM/components/sca_fatfs.json"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "f75868ad44d43d965c931826cb05a70d736378d86f9b8c21e1572ef57fa7fa6d"
         }
       ]
     },
@@ -2893,6 +2957,12 @@
           "name": "bsp:license-evidence",
           "value": "ThirdParty/FreeRTOS/License/license.txt"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "999fb9a5f10d77b9d16ad92f8fde09e69c7eb7be6b51be8e1a5f8d744536ad3d"
+        }
       ]
     },
     {
@@ -2908,7 +2978,7 @@
       "licenses": [
         {
           "license": {
-            "name": "Independent JPEG Group license"
+            "id": "IJG"
           }
         }
       ],
@@ -2948,6 +3018,12 @@
         {
           "name": "bsp:license-evidence",
           "value": "ThirdParty/libjpeg/README"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "3da3bf0e2207d70ab68bd92936cf083d73ee19a2c2c80bf42d07fa8416c53540"
         }
       ]
     },
@@ -3008,6 +3084,12 @@
         {
           "name": "bsp:license-evidence",
           "value": "ThirdParty/LibMAD/inc/mad.h; ThirdParty/LibMAD/inc/version.h; ThirdParty/LibMAD/src/version.c"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "5e9f29e8b34ef870219b5077803afbaaa65bd4c113b080b0d55cfaa3088629aa"
         }
       ]
     },
@@ -3073,6 +3155,12 @@
           "name": "bsp:license-evidence",
           "value": "ThirdParty/lwIP/COPYING; ThirdParty/lwIP/README"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "be7747851230cdd853bc0651ba01ed7262d2ddcf44687d4fd6d7de088f7458e0"
+        }
       ]
     },
     {
@@ -3137,6 +3225,12 @@
           "name": "bsp:license-evidence",
           "value": "ThirdParty/mbedtls-3.1.0/LICENSE; ThirdParty/mbedtls-3.1.0/README.md; ThirdParty/mbedtls-3.1.0/include/mbedtls/version.h"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "cb9d24a394b9be8e7101f71c8de692fe3bb5bc929c5575a80ab697d15b7ace13"
+        }
       ]
     },
     {
@@ -3152,7 +3246,12 @@
       "licenses": [
         {
           "license": {
-            "name": "Eclipse Public License v1.0 OR Eclipse Distribution License v1.0"
+            "id": "EPL-1.0"
+          }
+        },
+        {
+          "license": {
+            "id": "BSD-3-Clause"
           }
         }
       ],
@@ -3196,6 +3295,12 @@
         {
           "name": "bsp:license-evidence",
           "value": "ThirdParty/paho.mqtt.embedded-c/README.md; ThirdParty/paho.mqtt.embedded-c/about.html; ThirdParty/paho.mqtt.embedded-c/epl-v10; ThirdParty/paho.mqtt.embedded-c/edl-v10; ThirdParty/paho.mqtt.embedded-c/MQTTPacket/src/MQTTPacket.h"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "6c7921c97c103398152d53527290e4072914176ab2f48b1635fb4f3f093104ab"
         }
       ]
     },
@@ -3256,6 +3361,12 @@
           "name": "bsp:license-evidence",
           "value": "ThirdParty/SFUD/inc/sfud.h; ThirdParty/SFUD/inc/sfud_def.h; ThirdParty/SFUD/src/sfud.c; ThirdParty/SFUD/port/sfud_port.c"
         }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2aeae8d4fd3aabce425968f38ab1b4d995642b268850646eb9dbcb6358ec8e27"
+        }
       ]
     },
     {
@@ -3270,7 +3381,7 @@
       "licenses": [
         {
           "license": {
-            "name": "GNU Library General Public License v2.0"
+            "id": "LGPL-2.0-only"
           }
         }
       ],
@@ -3314,6 +3425,12 @@
         {
           "name": "bsp:license-evidence",
           "value": "ThirdParty/shine/COPYING; ThirdParty/shine/README.md; ThirdParty/shine/README.old"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "fb648ce3b3284377bb8d7d1e859b65db0d7d051335f1e5ae5c2969744d3bdd6b"
         }
       ]
     },
@@ -3378,7 +3495,8 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/amd64/libusbK.sys"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk@3.0.7.0 built by: WinDDK"
     },
     {
       "type": "device-driver",
@@ -3443,7 +3561,8 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/x86/libusb0.sys"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusb-win32-kernel-driver@1.2.6.0"
     },
     {
       "type": "device-driver",
@@ -3506,7 +3625,8 @@
           "name": "bsp:file-path",
           "value": "SampleCode/ISP/ISP_DFU/WindowsDriver/x86/libusbK.sys"
         }
-      ]
+      ],
+      "purl": "pkg:generic/libusbk@3.0.7.0 built by: WinDDK"
     }
   ],
   "dependencies": [

@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:d4d1dc65-7102-43c7-b7c2-4da3f785e657",
+  "serialNumber": "urn:uuid:560925b6-d17e-42e4-ab22-1cf8338217c6",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-07-24T18:19:05+08:00",
+    "timestamp": "2026-08-21T18:44:16+08:00",
     "tools": {
       "components": [
         {
@@ -20,7 +20,14 @@
       "bom-ref": "242d9232a926e853",
       "type": "library",
       "name": "MCU Driver",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/mcu-driver@v3.00.005-21-gf3049de9-dirty",
       "licenses": [
         {
           "license": {
@@ -98,14 +105,38 @@
           "value": "Utilities/"
         }
       ]
-    }
+    },
+    "supplier": {
+      "name": "Nuvoton Technology Corp.",
+      "url": [
+        "https://www.nuvoton.com"
+      ]
+    },
+    "authors": [
+      {
+        "name": "Nuvoton Technology Corp."
+      }
+    ]
   },
   "components": [
     {
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-cryptoaccelerator",
       "name": "m460 CryptoAccelerator",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-cryptoaccelerator@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "84a81e5ca2e2d595ae71deea0de794c6e768fe7c056c85c0957bf58b534406af"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -150,7 +181,20 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-device",
       "name": "m460 Device",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-device@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "34ae7e5b1f6a46956b23ea010e767d80c771753eff4ffa3397cf30fefb06e5b5"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -195,7 +239,20 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-numaker",
       "name": "m460 NuMaker",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-numaker@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "02b00e88e3ea033f9b39fd4fa45a728bcabfe7319a0dc7580a930110d0e90496"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -240,11 +297,24 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-smartcardlib",
       "name": "m460 SmartcardLib",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-smartcardlib@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "2559cfee57711ca735314e2d0b1603d0374a20b9f66ff0c7794f59acb731e525"
+        }
+      ],
       "licenses": [
         {
           "license": {
-            "name": "Nuvoton Proprietary"
+            "id": "LicenseRef-Nuvoton-Proprietary"
           }
         }
       ],
@@ -313,7 +383,20 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-stddriver",
       "name": "m460 StdDriver",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-stddriver@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "23db750e90cb520f63c87ad040e7237cd8c320f77cf65a10c08c6adadf4c3efc"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -358,7 +441,20 @@
       "type": "library",
       "bom-ref": "m460bsp:product-component:library-usbhostlib",
       "name": "m460 UsbHostLib",
-      "version": "v3.00.005-16-gb32d6378",
+      "version": "v3.00.005-21-gf3049de9-dirty",
+      "supplier": {
+        "name": "Nuvoton Technology Corp.",
+        "url": [
+          "https://www.nuvoton.com"
+        ]
+      },
+      "purl": "pkg:generic/nuvoton/library-usbhostlib@v3.00.005-21-gf3049de9-dirty",
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "a11f62aa3e010cb9c9ff7d54e437f531dc1b9fb3083273813758e68b57423c7e"
+        }
+      ],
       "licenses": [
         {
           "license": {
@@ -451,6 +547,12 @@
         {
           "name": "bsp:version-evidence",
           "value": "Library/CMSIS/Documentation/General/html/index.html; Library/CMSIS/Documentation/General/html/cm_revisionHistory.html"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "faf8d95b5fd4d6153b747aa31b857dbfe25a5133c034611e617dbcfcb0d90a0b"
         }
       ]
     }
