@@ -2,10 +2,10 @@
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:ea958de8-55b3-4829-a664-b95036cf1892",
+  "serialNumber": "urn:uuid:fd825d45-2c86-4274-ab43-4199849fc7b9",
   "version": 1,
   "metadata": {
-    "timestamp": "2026-08-24T13:26:07+08:00",
+    "timestamp": "2026-09-01T11:37:22+08:00",
     "tools": {
       "components": [
         {
@@ -20,14 +20,14 @@
       "bom-ref": "e1f8148bf663a81a",
       "type": "application",
       "name": "MCU Test Sample",
-      "version": "v3.00.005-22-g7afff5b8",
+      "version": "v3.00.005-23-geb05ca73",
       "supplier": {
         "name": "Nuvoton Technology Corp.",
         "url": [
           "https://www.nuvoton.com"
         ]
       },
-      "purl": "pkg:generic/nuvoton/mcu-test-sample@v3.00.005-22-g7afff5b8",
+      "purl": "pkg:generic/nuvoton/mcu-test-sample@v3.00.005-23-geb05ca73",
       "licenses": [
         {
           "license": {
@@ -342,7 +342,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Nuvoton-Proprietary"
+            "name": "Nuvoton Software License Agreement"
           }
         }
       ],
@@ -421,7 +421,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Nuvoton-Proprietary"
+            "name": "Nuvoton Software License Agreement"
           }
         }
       ],
@@ -500,7 +500,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -579,7 +579,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -658,7 +658,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -737,7 +737,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -868,7 +868,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -999,7 +999,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Microsoft-Software-License-Terms"
+            "name": "Microsoft Software License Terms"
           }
         }
       ],
@@ -1077,7 +1077,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-Nuvoton-Proprietary"
+            "name": "Nuvoton Software License Agreement"
           }
         }
       ],
@@ -2795,14 +2795,14 @@
       "type": "application",
       "bom-ref": "m460bsp:test-sample-component:samplecode",
       "name": "m460 SampleCode",
-      "version": "v3.00.005-22-g7afff5b8",
+      "version": "v3.00.005-23-geb05ca73",
       "supplier": {
         "name": "Nuvoton Technology Corp.",
         "url": [
           "https://www.nuvoton.com"
         ]
       },
-      "purl": "pkg:generic/nuvoton/samplecode@v3.00.005-22-g7afff5b8",
+      "purl": "pkg:generic/nuvoton/samplecode@v3.00.005-23-geb05ca73",
       "hashes": [
         {
           "alg": "SHA-256",
@@ -2862,7 +2862,7 @@
       "licenses": [
         {
           "license": {
-            "id": "LicenseRef-FatFs-license--BSD-like--as-declared-by-ChaN-in-source-header-"
+            "name": "FatFs-license--BSD-like--as-declared-by-ChaN-in-source-header-"
           }
         }
       ],
